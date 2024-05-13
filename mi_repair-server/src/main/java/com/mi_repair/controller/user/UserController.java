@@ -29,15 +29,4 @@ public class UserController {
         return Result.success(user);
     }
 
-    /**
-     * 用户下单
-     * @return
-     */
-
-
-    @GetMapping("/hello")
-    public String hello(){
-        log.info("hello");
-        return "hello";
-    }
 }

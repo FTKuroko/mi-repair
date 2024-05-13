@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user/orderRepair")
 @Slf4j
 @Api(tags = "用户维修单管理接口")
-public class OrderRepairController {
+public class UserOrderRepairController {
 
     @Autowired
     private OrderRepairService orderRepairService;
