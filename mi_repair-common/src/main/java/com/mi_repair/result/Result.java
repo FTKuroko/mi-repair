@@ -1,5 +1,7 @@
 package com.mi_repair.result;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -7,6 +9,7 @@ import java.io.Serializable;
  * @description 后端返回结果统一
  * @date 2024/5/13 14:12
  */
+@Data
 public class Result<T> implements Serializable {
 
     private Integer code;

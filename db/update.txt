@@ -1,0 +1,2 @@
+2024.5.13
+  1. 更新了共同代码com/mi_repair/result/Result.java 中加了@Data，不然前端解析不了
