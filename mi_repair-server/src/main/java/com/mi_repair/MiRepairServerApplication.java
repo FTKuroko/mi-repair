@@ -14,5 +14,4 @@ public class MiRepairServerApplication {
         SpringApplication.run(MiRepairServerApplication.class, args);
         log.info("启动...");
     }
-
 }
