@@ -1,5 +1,6 @@
 package com.mi_repair.entity;
 
+import com.mi_repair.enums.RepairOrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,4 +43,6 @@ public class OrderRepair implements Serializable {
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
+
+    private RepairOrderStatus repairOrderStatus;
 }
