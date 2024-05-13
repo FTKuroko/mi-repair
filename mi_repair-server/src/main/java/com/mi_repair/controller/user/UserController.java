@@ -29,9 +29,4 @@ public class UserController {
         return Result.success(user);
     }
 
-    @GetMapping("/hello")
-    public String hello(){
-        log.info("hello");
-        return "hello";
-    }
 }
