@@ -12,7 +12,10 @@ spring:
       url: jdbc:mysql://${mi_repair.datasource.host}:${mi_repair.datasource.port}/${mi_repair.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: ${mi_repair.datasource.username}
       password: ${mi_repair.datasource.password}
-
+  redis:
+    host: 192.168.130.100
+    port: 6379
+    password: 177412lh
 mybatis:
   #mapper配置文件
   mapper-locations: classpath:mapper/*.xml

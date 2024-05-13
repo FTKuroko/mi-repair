@@ -42,6 +42,13 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+        <!--Redis-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+
         <!--实体类-->
         <dependency>
             <groupId>com</groupId>
