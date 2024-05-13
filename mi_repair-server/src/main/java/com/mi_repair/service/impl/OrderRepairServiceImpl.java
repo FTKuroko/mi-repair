@@ -19,6 +19,7 @@ public class OrderRepairServiceImpl implements OrderRepairService {
 
     @Override
     public OrderRepairSubmitVO submitOrderRepair(OrderRepairSubmitDTO orderRepairSubmitDTO) {
+        orderRepairMapper.submit(orderRepairSubmitDTO);
         return null;
     }
 }

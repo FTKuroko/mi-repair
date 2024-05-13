@@ -1,5 +1,6 @@
 package com.mi_repair.mapper;
 
+import com.mi_repair.dto.OrderRepairSubmitDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,4 +10,11 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface OrderRepairMapper {
+
+    /**
+     * 用户下维修单
+     * @param orderRepairSubmitDTO  维修单信息
+     * @return
+     */
+    public int submit(OrderRepairSubmitDTO orderRepairSubmitDTO);
 }
