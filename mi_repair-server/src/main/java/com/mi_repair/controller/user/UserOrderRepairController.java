@@ -1,12 +1,14 @@
 package com.mi_repair.controller.user;
 
 import com.mi_repair.dto.OrderRepairSubmitDTO;
+import com.mi_repair.entity.OrderRepair;
 import com.mi_repair.result.Result;
 import com.mi_repair.service.OrderRepairService;
 import com.mi_repair.vo.OrderRepairSubmitVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
