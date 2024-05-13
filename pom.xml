@@ -28,7 +28,7 @@
         <knife4j>3.0.2</knife4j>
         <aspectj>1.9.4</aspectj>
         <jjwt>0.9.1</jjwt>
-        <jaxb-api>2.3.1</jaxb-api>
+<!--        <jaxb-api>2.3.1</jaxb-api>-->
 <!--        <poi>3.16</poi>-->
     </properties>
 
