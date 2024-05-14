@@ -1,4 +1,4 @@
-package com.mi_repair.entity;
+package com.mi_repair.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,12 +17,12 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Storage implements Serializable {
+public class StorageVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    private Integer type;
+    private String status;
 
     private String name;
 
