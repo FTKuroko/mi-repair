@@ -1,5 +1,6 @@
-package com.mi_repair.entity;
+package com.mi_repair.dto;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,11 +15,8 @@ import java.math.BigDecimal;
  * @date 2024/5/13 13:49
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Storage implements Serializable {
-    private static final long serialVersionUID = 1L;
+@ApiModel(description = "存储")
+public class StorageDTO implements Serializable {
 
     private Long id;
 

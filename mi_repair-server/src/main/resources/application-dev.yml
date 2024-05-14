@@ -5,4 +5,13 @@ mi_repair:
     port: 3306
     database: repairsys
     username: root
-    password: root
+    password: 123456
+file:
+#  upload: "uploads\\"
+  upload: "D:\\code\\mi_repair\\uploads\\"
+#pagehelper分页插件配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
