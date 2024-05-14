@@ -12,6 +12,10 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
+/**
+ * author: 李晴
+ * description: 状态机使用
+ */
 @Slf4j
 @Component
 public class RepairOrderProcessor {

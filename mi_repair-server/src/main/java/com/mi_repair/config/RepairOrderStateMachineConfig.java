@@ -3,18 +3,30 @@ package com.mi_repair.config;
 
 
 
+import com.mi_repair.entity.OrderRepair;
 import com.mi_repair.enums.RepairOrderEvent;
 import com.mi_repair.enums.RepairOrderStatus;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.statemachine.StateMachineContext;
+import org.springframework.statemachine.StateMachinePersist;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
+import org.springframework.statemachine.persist.DefaultStateMachinePersister;
+import org.springframework.statemachine.persist.StateMachinePersister;
+import org.springframework.statemachine.support.DefaultStateMachineContext;
 
 import java.util.EnumSet;
-
+/**
+ * @author 李晴
+ * @description 状态机配置类
+ */
 @EnableStateMachine
 @Configuration
+@Slf4j
 public class RepairOrderStateMachineConfig extends EnumStateMachineConfigurerAdapter<RepairOrderStatus, RepairOrderEvent> {
 
 
@@ -28,28 +40,28 @@ public class RepairOrderStateMachineConfig extends EnumStateMachineConfigurerAda
     @Override
     public void configure(StateMachineTransitionConfigurer<RepairOrderStatus, RepairOrderEvent> transitions) throws Exception {
         transitions
-                //用户下单 -> 工程师接单 -> 用户确认
-                .withExternal().source(RepairOrderStatus.WAITING_FOR_WORKER_ACCEPTANCE).target(RepairOrderStatus.WAITING_FOR_USER_CONFIRMATION)
+                //等待工程师接单 -> 工程师接单 -> 等待用户确认
+                .withExternal()
+                .source(RepairOrderStatus.WAITING_FOR_WORKER_ACCEPTANCE).target(RepairOrderStatus.WAITING_FOR_USER_CONFIRMATION)
                 .event(RepairOrderEvent.WORKER_ACCEPT_ORDER)
-
+                .and()
+                //等待用户确认 -> 用户确认 -> 用户已确认
+                .withExternal()
+                .source(RepairOrderStatus.WAITING_FOR_USER_CONFIRMATION).target(RepairOrderStatus.CONFIRMED)
+                .event(RepairOrderEvent.USER_CONFIRM_ORDER)
+                .and()
+                //等待工程师接单 -> 用户取消 -> 订单已取消
+                .withExternal()
+                .source(RepairOrderStatus.WAITING_FOR_WORKER_ACCEPTANCE).target(RepairOrderStatus.CANCEL)
+                .event(RepairOrderEvent.USER_CANCEL_ORDER)
+                .and()
+                //等待用户确认 -> 用户取消 -> 订单已取消
+                .withExternal()
+                .source(RepairOrderStatus.WAITING_FOR_USER_CONFIRMATION).target(RepairOrderStatus.CANCEL)
+                .event(RepairOrderEvent.USER_CANCEL_ORDER)
+                .and()
         ;
 
     }
-
-//    @Bean
-//    public StateMachinePersister<RepairOrderStatus, RepairOrderEvent, RepairOrder> persister(){
-//        return new DefaultStateMachinePersister<>(new StateMachinePersist<RepairOrderStatus, RepairOrderEvent, RepairOrder>() {
-//            @Override
-//            public void write(StateMachineContext<RepairOrderStatus, RepairOrderEvent> context, RepairOrder order) throws Exception {
-//                //此处并没有进行持久化操作
-//            }
-//
-//            @Override
-//            public StateMachineContext<RepairOrderStatus, RepairOrderEvent> read(RepairOrder order) throws Exception {
-//                //此处直接获取order中的状态，其实并没有进行持久化读取操作
-//                return new DefaultStateMachineContext<>(order.getStatus(), null, null, null);
-//            }
-//        });
-//    }
 
 }

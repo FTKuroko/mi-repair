@@ -1,5 +1,9 @@
 package com.mi_repair.enums;
 
+/**
+ * @author 李晴
+ * @description 状态机状态枚举类
+ */
 public enum RepairOrderStatus {
     /*
        订单部分
@@ -8,7 +12,7 @@ public enum RepairOrderStatus {
 
     , WAITING_FOR_USER_CONFIRMATION("等待用户确认", 2)
 
-    , Confirmed("用户已确认", 3)
+    , CONFIRMED("用户已确认", 3)
 
     , CANCEL("用户已取消订单", 4)
     /*
