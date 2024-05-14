@@ -3,12 +3,12 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mi_repair.mapper.StorageMapper">
-    <insert id="addStorage" parameterType="StorageDTO" useGeneratedKeys="true" keyProperty="id">
+    <insert id="addStorage" parameterType="com.mi_repair.dto.StorageDTO" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO storage (type , name , price, amount)
         VALUES (#{type}, #{name}, #{price}, #{amount})
     </insert>
 
-    <update id="subStorage" parameterType="StorageDTO">
+    <update id="subStorage" parameterType="com.mi_repair.dto.StorageDTO">
         UPDATE storage
         <set>
             <if test="amount != null">
@@ -19,7 +19,7 @@
     </update>
 
 
-    <select id="getStorageList" parameterType="Request" resultType="com.mi_repair.entity.Storage">
+    <select id="getStorageList" parameterType="com.mi_repair.Req.Request" resultType="com.mi_repair.entity.Storage">
         SELECT * FROM storage
         <where>
             <if test="id != null">

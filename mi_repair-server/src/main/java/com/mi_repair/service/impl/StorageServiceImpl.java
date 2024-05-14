@@ -11,6 +11,7 @@ import com.mi_repair.result.Result;
 import com.mi_repair.service.StorageService;
 import com.mi_repair.vo.StorageVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,10 +35,7 @@ public class StorageServiceImpl implements StorageService {
         List<StorageVO> result = new ArrayList<>();
         for (Storage storage : listPage) {
             StorageVO storageVO = new StorageVO();
-            storageVO.setAmount(storage.getAmount());
-            storageVO.setName(storage.getName());
-            storageVO.setPrice(storage.getPrice());
-            storageVO.setId(storage.getId());
+            BeanUtils.copyProperties(storage, storageVO);
             for (StorageType value : StorageType.values()) {
                 if(value.getCode() == storage.getType()){
                     storageVO.setStatus(value.getName());

@@ -9,7 +9,7 @@
         VALUES (#{type}, #{orderId}, #{path})
     </insert>
 
-    <select id="getFiles" parameterType="FileDTO" resultType="File">
+    <select id="getFiles" parameterType="com.mi_repair.dto.FileDTO" resultType="File">
         SELECT id,path FROM file
         WHERE order_id = #{orderId}
         AND type = #{type}
