@@ -23,3 +23,9 @@ mybatis:
   configuration:
     #开启驼峰命名
     map-underscore-to-camel-case: true
+
+#日志配置
+logging:
+  level:
+    com.mi_repair: debug
+    org.springframework: warn
