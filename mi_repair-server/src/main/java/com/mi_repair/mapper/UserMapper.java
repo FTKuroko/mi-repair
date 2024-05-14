@@ -1,7 +1,5 @@
 package com.mi_repair.mapper;
 
-import com.mi_repair.dto.UserLoginDTO;
-import com.mi_repair.dto.UserRegDTO;
 import com.mi_repair.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -17,12 +15,12 @@ public interface UserMapper {
      * @param user
      * @return
      */
-    User login(UserLoginDTO user);
+    User login(User user);
 
     /**
      * 用户注册
-     * @param dto
+     * @param user
      * @return
      */
-    int register(UserRegDTO dto);
+    int register(User user);
 }

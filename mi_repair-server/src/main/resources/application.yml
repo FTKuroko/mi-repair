@@ -23,7 +23,13 @@ spring:
 mybatis:
   #mapper配置文件
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.mi_repair.*
+  type-aliases-package: com.mi_repair.entity
   configuration:
     #开启驼峰命名
     map-underscore-to-camel-case: true
+
+#日志配置
+logging:
+  level:
+    com.mi_repair: debug
+    org.springframework: warn

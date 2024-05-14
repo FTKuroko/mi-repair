@@ -3,11 +3,11 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mi_repair.mapper.UserMapper">
-    <insert id="register" parameterType="UserRegDTO"  useGeneratedKeys="true" keyProperty="id">
+    <insert id="register" parameterType="User"  useGeneratedKeys="true" keyProperty="id">
         INSERT INTO users (name, password, phone, addr)
         VALUES (#{name}, #{password}, #{phone}, #{addr})
     </insert>
-    <select id="login" parameterType="UserLoginDTO" resultType="User">
+    <select id="login" parameterType="User" resultType="User">
         SELECT * FROM users
         WHERE name = #{name}
         AND password = #{password}

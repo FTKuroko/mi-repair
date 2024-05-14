@@ -1,7 +1,5 @@
 package com.mi_repair.mapper;
 
-import com.mi_repair.dto.WorkerLoginDTO;
-import com.mi_repair.dto.WorkerRegDTO;
 import com.mi_repair.entity.Worker;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,12 +10,12 @@ public interface WorkerMapper {
      * @param dto
      * @return
      */
-    Worker login(WorkerLoginDTO dto);
+    Worker login(Worker worker);
 
     /**
      * 用户注册
      * @param dto
      * @return
      */
-    int register(WorkerRegDTO dto);
+    int register(Worker worker);
 }
