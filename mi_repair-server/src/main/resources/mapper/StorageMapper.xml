@@ -17,6 +17,10 @@
         </set>
         WHERE id = #{id}
     </update>
+    <delete id="delStorage" parameterType="com.mi_repair.dto.StorageDTO">
+        DELETE FROM storage
+        WHERE id = #{id}
+    </delete>
 
 
     <select id="getStorageList" parameterType="com.mi_repair.Req.Request" resultType="com.mi_repair.entity.Storage">

@@ -15,4 +15,6 @@ public interface StorageMapper {
     void addStorage(StorageDTO dto);
 
     void subStorage(StorageDTO dto);
+
+    void delStorage(StorageDTO dto);
 }

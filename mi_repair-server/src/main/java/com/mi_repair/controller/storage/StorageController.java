@@ -70,5 +70,15 @@ public class StorageController {
         }
     }
 
+    @PostMapping("/del")
+    public Result<String> delStorage(@RequestBody StorageDTO dto){
+        try{
+            storageService.delStorage(dto);
+            return Result.success("成功");
+        }catch (Exception e){
+            return Result.error("删除失败");
+        }
+    }
+
 
 }

@@ -55,4 +55,9 @@ public class StorageServiceImpl implements StorageService {
     public void subStorage(StorageDTO dto) {
         storageMapper.subStorage(dto);
     }
+
+    @Override
+    public void delStorage(StorageDTO dto) {
+        storageMapper.delStorage(dto);
+    }
 }
