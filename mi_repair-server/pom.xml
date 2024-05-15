@@ -28,6 +28,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!--支付宝支付-->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>4.8.73.ALL</version>
+        </dependency>
+
         <!--状态机-->
         <dependency>
             <groupId>org.springframework.statemachine</groupId>
@@ -63,6 +70,11 @@
 
 
 
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-spring-boot-starter</artifactId>
+            <version>2.0.4</version>
+        </dependency>
 
         <!--实体类-->
         <dependency>
