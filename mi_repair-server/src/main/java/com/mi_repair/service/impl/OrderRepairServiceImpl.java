@@ -2,16 +2,22 @@ package com.mi_repair.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.mi_repair.context.BaseContext;
 import com.mi_repair.dto.OrderRepairSubmitDTO;
+import com.mi_repair.dto.RepairMaterialsDTO;
 import com.mi_repair.dto.UserOrderPageQueryDTO;
+import com.mi_repair.dto.WorkerOrderPageQueryDTO;
+import com.mi_repair.entity.MaterialReq;
 import com.mi_repair.entity.OrderRepair;
+import com.mi_repair.entity.Storage;
 import com.mi_repair.enums.RepairOrderStatus;
+import com.mi_repair.exception.BaseException;
+import com.mi_repair.mapper.MaterialReqMapper;
 import com.mi_repair.mapper.OrderRepairMapper;
+import com.mi_repair.mapper.StorageMapper;
 import com.mi_repair.result.PageResult;
-import com.mi_repair.result.Result;
 import com.mi_repair.service.OrderRepairService;
 import com.mi_repair.vo.OrderRepairSubmitVO;
+import com.mi_repair.vo.RepairMaterialsVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +34,10 @@ import java.util.List;
 public class OrderRepairServiceImpl implements OrderRepairService {
     @Autowired
     private OrderRepairMapper orderRepairMapper;
+    @Autowired
+    private StorageMapper storageMapper;
+    @Autowired
+    private MaterialReqMapper matrialReqMapper;
 
     @Override
     public OrderRepairSubmitVO submitOrderRepair(OrderRepairSubmitDTO orderRepairSubmitDTO) {
@@ -84,5 +94,44 @@ public class OrderRepairServiceImpl implements OrderRepairService {
             return 0;
         }
         return orderRepairMapper.delete(orderId);
+    }
+
+    @Override
+    public int workerConfirm(Long orderId){
+        int code = RepairOrderStatus.WAITING_FOR_USER_CONFIRMATION.getCode();
+        return orderRepairMapper.updateStatus(orderId, code);
+    }
+
+    @Override
+    public PageResult pageQuery(WorkerOrderPageQueryDTO workerOrderPageQueryDTO) {
+        PageHelper.startPage(workerOrderPageQueryDTO.getPage(), workerOrderPageQueryDTO.getPageSize());
+        Page<OrderRepair> page = orderRepairMapper.pageQueryByWorker(workerOrderPageQueryDTO);
+        long total = page.getTotal();
+        List<OrderRepair> result = page.getResult();
+        return new PageResult(total, result);
+    }
+
+    @Override
+    public RepairMaterialsVO applyMaterials(RepairMaterialsDTO repairMaterialsDTO) {
+        MaterialReq materialReq = new MaterialReq();
+        BeanUtils.copyProperties(repairMaterialsDTO, materialReq);
+        // 剩余字段填充
+        // TODO：获取当前工程师id
+        Long workerId = 1L;
+        materialReq.setWorkerId(workerId);
+        Storage material = storageMapper.getStorageByName(repairMaterialsDTO.getMaterialName());
+        if(material.getAmount() < repairMaterialsDTO.getMaterialAmount()){
+            throw new BaseException("材料不足");
+        }
+        materialReq.setMaterialId(material.getId());
+        materialReq.setStatus(0);
+        LocalDateTime time = LocalDateTime.now();
+        materialReq.setCreateTime(time);
+        materialReq.setUpdateTime(time);
+
+        // 插入数据库
+        long i = matrialReqMapper.submit(materialReq);
+        RepairMaterialsVO materialsVO = new RepairMaterialsVO(i, time);
+        return materialsVO;
     }
 }
