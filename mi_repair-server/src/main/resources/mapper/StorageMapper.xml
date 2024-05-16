@@ -37,4 +37,11 @@
             </if>
         </where>
     </select>
+
+    <select id="getStorageByName" resultType="com.mi_repair.entity.Storage">
+        select * from storage
+        <where>
+            <if test="name != null and name != ''">and name = #{name}</if>
+        </where>
+    </select>
 </mapper>

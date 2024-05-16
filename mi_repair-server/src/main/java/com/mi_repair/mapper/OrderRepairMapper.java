@@ -3,6 +3,7 @@ package com.mi_repair.mapper;
 import com.github.pagehelper.Page;
 import com.mi_repair.dto.OrderRepairSubmitDTO;
 import com.mi_repair.dto.UserOrderPageQueryDTO;
+import com.mi_repair.dto.WorkerOrderPageQueryDTO;
 import com.mi_repair.entity.OrderRepair;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -42,5 +43,25 @@ public interface OrderRepairMapper {
      */
     OrderRepair selectById(Long id);
 
+    /**
+     * 用户取消订单
+     * @param orderId
+     * @return
+     */
     int delete(Long orderId);
+
+    /**
+     * 修改订单状态
+     * @param orderId
+     * @param code
+     * @return
+     */
+    int updateStatus(Long orderId, int code);
+
+    /**
+     * 工程师分页查询维修单
+     * @param workerOrderPageQueryDTO
+     * @return
+     */
+    Page<OrderRepair> pageQueryByWorker(WorkerOrderPageQueryDTO workerOrderPageQueryDTO);
 }
