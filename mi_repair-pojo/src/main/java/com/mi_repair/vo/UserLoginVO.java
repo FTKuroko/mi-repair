@@ -20,4 +20,6 @@ public class UserLoginVO implements Serializable {
 
 
     private String name;
+
+
 }
