@@ -1,19 +1,17 @@
 package com.mi_repair.controller.user;
 
 import com.mi_repair.dto.OrderRepairSubmitDTO;
-import com.mi_repair.entity.OrderRepair;
+import com.mi_repair.dto.UserOrderPageQueryDTO;
+import com.mi_repair.enums.RepairOrderStatus;
+import com.mi_repair.result.PageResult;
 import com.mi_repair.result.Result;
 import com.mi_repair.service.OrderRepairService;
 import com.mi_repair.vo.OrderRepairSubmitVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Kuroko
@@ -36,4 +34,29 @@ public class UserOrderRepairController {
         OrderRepairSubmitVO orderRepairSubmitVO = orderRepairService.submitOrderRepair(orderRepairSubmitDTO);
         return Result.success(orderRepairSubmitVO);
     }
+
+    @PutMapping("/check")
+    @ApiOperation("用户维修单确认")
+    public Result<String> confirm(@RequestParam("orderId") Long orderId){
+        log.info("用户确认维修单信息:维修单id{}", orderId);
+        return orderRepairService.confirm(orderId) > 0 ? Result.success("用户已确认") :
+                Result.error("用户确认失败");
+    }
+
+    @GetMapping("/page")
+    @ApiOperation("用户查询订单")
+    public Result<PageResult> pageQuery(@RequestBody UserOrderPageQueryDTO userOrderPageQueryDTO){
+        log.info("用户订单分页查询:{}", userOrderPageQueryDTO);
+        PageResult result = orderRepairService.pageQuery(userOrderPageQueryDTO);
+        return Result.success(result);
+    }
+
+    @DeleteMapping("/cancel")
+    @ApiOperation("用户取消维修单")
+    public Result<String> delete(@RequestParam("orderId") Long orderId){
+        log.info("用户取消维修单:{]", orderId);
+        return orderRepairService.delete(orderId) > 0 ? Result.success("用户已取消维修单") :
+                Result.error("用户取消维修单失败");
+    }
+
 }

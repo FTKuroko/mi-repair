@@ -28,4 +28,37 @@
             #{status},#{createTime},#{updateTime}
         )
     </insert>
+
+    <update id="confirm" parameterType="com.mi_repair.entity.OrderRepair">
+        update repair_order set status = 3
+        <where>
+            id = #{orderId}
+        </where>
+    </update>
+
+    <select id="pageQueryByUserId" resultType="com.mi_repair.entity.OrderRepair">
+        select * from repair_order
+        <where>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectById" resultType="com.mi_repair.entity.OrderRepair">
+        select * from repair_order
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{orderId}
+            </if>
+        </where>
+    </select>
+
+    <update id="delete" parameterType="com.mi_repair.entity.OrderRepair">
+        update repair_order set status = 4
+        <where>
+            id = #{orderId}
+        </where>
+    </update>
 </mapper>

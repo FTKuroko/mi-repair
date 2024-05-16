@@ -1,8 +1,15 @@
 package com.mi_repair.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.mi_repair.context.BaseContext;
 import com.mi_repair.dto.OrderRepairSubmitDTO;
+import com.mi_repair.dto.UserOrderPageQueryDTO;
 import com.mi_repair.entity.OrderRepair;
+import com.mi_repair.enums.RepairOrderStatus;
 import com.mi_repair.mapper.OrderRepairMapper;
+import com.mi_repair.result.PageResult;
+import com.mi_repair.result.Result;
 import com.mi_repair.service.OrderRepairService;
 import com.mi_repair.vo.OrderRepairSubmitVO;
 import org.springframework.beans.BeanUtils;
@@ -10,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author Kuroko
@@ -23,12 +31,58 @@ public class OrderRepairServiceImpl implements OrderRepairService {
 
     @Override
     public OrderRepairSubmitVO submitOrderRepair(OrderRepairSubmitDTO orderRepairSubmitDTO) {
+        // TODO:1、获取当前用户id
+        //Long id = BaseContext.getCurrentId();
+        // 2、对象转换
         OrderRepair orderRepair = new OrderRepair();
         BeanUtils.copyProperties(orderRepairSubmitDTO, orderRepair);
+        // 3、剩余字段信息填充
+        orderRepair.setUserId(2L);
         orderRepair.setStatus(0);
-        orderRepair.setCreateTime(LocalDateTime.now());
-        orderRepair.setUpdateTime(LocalDateTime.now());
-        orderRepairMapper.submit(orderRepair);
-        return null;
+        LocalDateTime time = LocalDateTime.now();
+        orderRepair.setCreateTime(time);
+        orderRepair.setUpdateTime(time);
+        // 4、插入数据
+        long submitID = orderRepairMapper.submit(orderRepair);
+        OrderRepairSubmitVO submitVO = OrderRepairSubmitVO.builder().id(submitID).orderTime(time).build();
+        return submitVO;
+    }
+
+    @Override
+    public int confirm(Long orderId){
+        // 1、 查找维修单信息
+        OrderRepair orderRepair = orderRepairMapper.selectById(orderId);
+        // 2、 TODO:获取当前用户 id
+        Long userId = 1L;
+        // 3、 判断当前维修单是否属于该用户
+        if(!userId.equals(orderRepair.getUserId())){
+            return 0;
+        }
+        return orderRepairMapper.confirm(orderId);
+    }
+
+    @Override
+    public PageResult pageQuery(UserOrderPageQueryDTO userOrderPageQueryDTO){
+
+        PageHelper.startPage(userOrderPageQueryDTO.getPage(), userOrderPageQueryDTO.getPageSize());
+        Page<OrderRepair> page = orderRepairMapper.pageQueryByUserId(userOrderPageQueryDTO);
+
+        long total = page.getTotal();
+        List<OrderRepair> result = page.getResult();
+        return new PageResult(total, result);
+    }
+
+    @Override
+    public int delete(Long orderId) {
+        // 1、 查找维修单信息
+        OrderRepair orderRepair = orderRepairMapper.selectById(orderId);
+        // 2、 TODO:获取当前用户 id
+        Long userId = 1L;
+        System.out.println(RepairOrderStatus.REPAIR.getCode());
+        // 3、 判断当前维修单是否属于该用户以及维修单当前状态能否取消
+        if(!userId.equals(orderRepair.getUserId()) || orderRepair.getStatus().equals(RepairOrderStatus.REPAIR.getCode())){
+            return 0;
+        }
+        return orderRepairMapper.delete(orderId);
     }
 }
