@@ -18,6 +18,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class UserLoginVO implements Serializable {
 
-
-    private String name;
+    private Long id;
+    private String userName;
+    private String phone;
+    private String token;
 }

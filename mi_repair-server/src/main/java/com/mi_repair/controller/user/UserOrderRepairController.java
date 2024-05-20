@@ -2,7 +2,6 @@ package com.mi_repair.controller.user;
 
 import com.mi_repair.dto.OrderRepairSubmitDTO;
 import com.mi_repair.dto.UserOrderPageQueryDTO;
-import com.mi_repair.enums.RepairOrderStatus;
 import com.mi_repair.result.PageResult;
 import com.mi_repair.result.Result;
 import com.mi_repair.service.OrderRepairService;

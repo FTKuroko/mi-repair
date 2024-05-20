@@ -9,7 +9,7 @@
     </insert>
     <select id="login" parameterType="User" resultType="User">
         SELECT * FROM users
-        WHERE name = #{name}
+        WHERE userName = #{userName}
         AND password = #{password}
     </select>
 </mapper>
