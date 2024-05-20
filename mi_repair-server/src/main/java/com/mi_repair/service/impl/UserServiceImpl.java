@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author Kuroko
@@ -66,7 +65,7 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(dto, user);
         userMapper.register(user);
         UserLoginVO vo = new UserLoginVO();
-        vo.setUserName(dto.getName());
+        vo.setUserName(dto.getUserName());
         return dto.getId()==null?null:vo;
     }
 }

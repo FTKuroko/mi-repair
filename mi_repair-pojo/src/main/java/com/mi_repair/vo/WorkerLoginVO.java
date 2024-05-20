@@ -1,6 +1,9 @@
 package com.mi_repair.vo;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -10,6 +13,12 @@ import java.io.Serializable;
  * @date 2024/5/13 21:43
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class WorkerLoginVO implements Serializable {
-    private String name;
+    private long id;
+    private String workerName;
+    private String phone;
+    private String token;
 }

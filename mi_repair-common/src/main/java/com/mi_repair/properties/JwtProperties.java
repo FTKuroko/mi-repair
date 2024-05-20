@@ -17,5 +17,7 @@ public class JwtProperties {
     private long userTtl;
     private String userTokenName;
 
-
+    private String workerSecretKey;
+    private long workerTtl;
+    private String workerTokenName;
 }

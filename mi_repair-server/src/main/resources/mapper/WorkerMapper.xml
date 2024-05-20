@@ -10,7 +10,7 @@
     </insert>
     <select id="login" parameterType="Worker" resultType="Worker">
         SELECT * FROM workers
-        WHERE name = #{name}
+        WHERE workerName = #{workerName}
         AND password = #{password}
     </select>
 

@@ -15,6 +15,7 @@ public class UserRegDTO implements Serializable {
     private Long id;
 
     private String name;
+    private String userName;
 
     private String password;
 
