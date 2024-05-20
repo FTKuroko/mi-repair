@@ -22,7 +22,7 @@ public class OrderRepairSubmitDTO {
     private String userName;
 
     @ApiModelProperty("手机号")
-    private String userNumber;
+    private String userPhone;
 
     @ApiModelProperty("用户地址")
     private String userAddr;

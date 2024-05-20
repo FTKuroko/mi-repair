@@ -1,7 +1,9 @@
 package com.mi_repair.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.mi_repair.context.BaseContext;
 import com.mi_repair.dto.OrderRepairSubmitDTO;
 import com.mi_repair.dto.RepairMaterialsDTO;
 import com.mi_repair.dto.UserOrderPageQueryDTO;
@@ -18,12 +20,15 @@ import com.mi_repair.result.PageResult;
 import com.mi_repair.service.OrderRepairService;
 import com.mi_repair.vo.OrderRepairSubmitVO;
 import com.mi_repair.vo.RepairMaterialsVO;
+import com.mi_repair.webSocket.WebSocketServer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Kuroko
@@ -38,23 +43,31 @@ public class OrderRepairServiceImpl implements OrderRepairService {
     private StorageMapper storageMapper;
     @Autowired
     private MaterialReqMapper matrialReqMapper;
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     @Override
     public OrderRepairSubmitVO submitOrderRepair(OrderRepairSubmitDTO orderRepairSubmitDTO) {
-        // TODO:1、获取当前用户id
-        //Long id = BaseContext.getCurrentId();
+        Long id = BaseContext.getCurrentId();
         // 2、对象转换
         OrderRepair orderRepair = new OrderRepair();
         BeanUtils.copyProperties(orderRepairSubmitDTO, orderRepair);
         // 3、剩余字段信息填充
-        orderRepair.setUserId(2L);
+        orderRepair.setUserId(id);
         orderRepair.setStatus(0);
         LocalDateTime time = LocalDateTime.now();
         orderRepair.setCreateTime(time);
         orderRepair.setUpdateTime(time);
         // 4、插入数据
-        long submitID = orderRepairMapper.submit(orderRepair);
-        OrderRepairSubmitVO submitVO = OrderRepairSubmitVO.builder().id(submitID).orderTime(time).build();
+        orderRepairMapper.submit(orderRepair);
+        OrderRepairSubmitVO submitVO = OrderRepairSubmitVO.builder().id(orderRepair.getId()).orderTime(time).build();
+        // 5、下单成功，向工程师端发起来单提醒   TODO: 待前后端联调
+        Map map = new HashMap();
+        map.put("type", 1);
+        map.put("orderId", orderRepair.getId());
+        map.put("content", "订单号:" + orderRepair.getId());
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
+
         return submitVO;
     }
 
@@ -62,8 +75,8 @@ public class OrderRepairServiceImpl implements OrderRepairService {
     public int confirm(Long orderId){
         // 1、 查找维修单信息
         OrderRepair orderRepair = orderRepairMapper.selectById(orderId);
-        // 2、 TODO:获取当前用户 id
-        Long userId = 1L;
+        // 2、 获取当前用户 id
+        Long userId = BaseContext.getCurrentId();
         // 3、 判断当前维修单是否属于该用户
         if(!userId.equals(orderRepair.getUserId())){
             return 0;
@@ -86,8 +99,8 @@ public class OrderRepairServiceImpl implements OrderRepairService {
     public int delete(Long orderId) {
         // 1、 查找维修单信息
         OrderRepair orderRepair = orderRepairMapper.selectById(orderId);
-        // 2、 TODO:获取当前用户 id
-        Long userId = 1L;
+        // 2、 获取当前用户 id
+        Long userId = BaseContext.getCurrentId();
         System.out.println(RepairOrderStatus.REPAIR.getCode());
         // 3、 判断当前维修单是否属于该用户以及维修单当前状态能否取消
         if(!userId.equals(orderRepair.getUserId()) || orderRepair.getStatus().equals(RepairOrderStatus.REPAIR.getCode())){
@@ -116,8 +129,8 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         MaterialReq materialReq = new MaterialReq();
         BeanUtils.copyProperties(repairMaterialsDTO, materialReq);
         // 剩余字段填充
-        // TODO：获取当前工程师id
-        Long workerId = 1L;
+        // 获取当前工程师id
+        Long workerId = BaseContext.getCurrentId();
         materialReq.setWorkerId(workerId);
         Storage material = storageMapper.getStorageByName(repairMaterialsDTO.getMaterialName());
         if(material.getAmount() < repairMaterialsDTO.getMaterialAmount()){

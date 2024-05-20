@@ -28,7 +28,7 @@ public class OrderRepair implements Serializable {
 
     private String userName;
 
-    private String userNumber;
+    private String userPhone;
 
     private String userAddr;
 

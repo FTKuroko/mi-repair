@@ -26,7 +26,7 @@ public class userOrderRepairTest {
     void testSubmit(){
         // 1、用户登录
         UserLoginDTO userLoginDTO = new UserLoginDTO();
-        userLoginDTO.setName("jackeylove");
+        userLoginDTO.setUserName("jackeylove");
         userLoginDTO.setPassword("11111111111");
         UserLoginVO login = userService.login(userLoginDTO);
         System.out.println(login);
@@ -35,7 +35,7 @@ public class userOrderRepairTest {
         //dto.setUserId(1L);
         dto.setUserName("zhangsan");
         dto.setUserAddr("河北秦皇岛");
-        dto.setUserNumber("xxxxxxxx");
+        dto.setUserPhone("xxxxxxxx");
         dto.setGoodsInfo("小米14");
         dto.setSn("xxxxxxxxx");
         dto.setDesc("手机电池有问题，需要频繁充电");
