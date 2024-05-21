@@ -4,11 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mi.repair.mapper.WorkerMapper">
 
-    <insert id="register" parameterType="Worker"  useGeneratedKeys="true" keyProperty="id">
+    <insert id="register" parameterType="com.mi.repair.entity.Worker"  useGeneratedKeys="true" keyProperty="id">
         INSERT INTO workers (name, password, phone)
         VALUES (#{name}, #{password}, #{phone})
     </insert>
-    <select id="login" parameterType="Worker" resultType="Worker">
+    <select id="login" parameterType="com.mi.repair.entity.Worker" resultType="Worker">
         SELECT * FROM workers
         WHERE workerName = #{workerName}
         AND password = #{password}

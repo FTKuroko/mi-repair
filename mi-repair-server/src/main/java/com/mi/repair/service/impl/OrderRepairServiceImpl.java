@@ -19,6 +19,7 @@ import com.mi.repair.exception.BaseException;
 import com.mi.repair.mapper.MaterialReqMapper;
 import com.mi.repair.mapper.StorageMapper;
 import com.mi.repair.vo.OrderRepairSubmitVO;
+import com.mi.repair.vo.OrderRepairVO;
 import com.mi.repair.vo.RepairMaterialsVO;
 import com.mi.repair.webSocket.WebSocketServer;
 import org.springframework.beans.BeanUtils;
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +94,18 @@ public class OrderRepairServiceImpl implements OrderRepairService {
 
         long total = page.getTotal();
         List<OrderRepair> result = page.getResult();
-        return new PageResult(total, result);
+        List<OrderRepairVO> pageInfo = new ArrayList<>(result.size());
+        for(OrderRepair order : result){
+            OrderRepairVO orderVO = new OrderRepairVO();
+            BeanUtils.copyProperties(order, orderVO);
+            for(RepairOrderStatus status : RepairOrderStatus.values()){
+                if(order.getStatus().equals(status.getCode())){
+                    orderVO.setStatusInfo(status.getDescription());
+                }
+            }
+            pageInfo.add(orderVO);
+        }
+        return new PageResult(total, pageInfo);
     }
 
     @Override
