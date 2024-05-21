@@ -9,6 +9,8 @@ import com.mi.repair.mapper.FileMapper;
 import com.mi.repair.service.FileService;
 import com.mi.repair.entity.File;
 import com.mi.repair.enums.FileStatus;
+import io.minio.BucketExistsArgs;
+import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import lombok.extern.slf4j.Slf4j;
@@ -122,33 +124,53 @@ public class FileServiceImpl implements FileService {
      * @param files
      */
     @Override
-    public void batchUpload(MultipartFile[] files) {
-
+    public String batchUpload(MultipartFile[] files) {
+        StringBuilder sb = new StringBuilder();
         try{
             for(MultipartFile file : files){
-                log.info("文件开始上传:{]", file);
-                // 获取文件的真实名称
-                String filename = file.getOriginalFilename();
-                // 文件扩展名
-                String extendName = filename.substring(filename.lastIndexOf("."));
-                // 构建文件上传相关信息
-                PutObjectArgs args = PutObjectArgs.builder()
-                        .bucket(bucket_files)
-                        .object(filename)
-                        .stream(file.getInputStream(), file.getSize(), -1)
-                        .contentType(file.getContentType())
-                        .build();
-
-                // 将文件上传到 minio 服务器
-                minioClient.putObject(args);
-                log.info("文件上传成功:{}", file);
-                // 组装文件信息，存入数据库
-                String url = minioConfig.getEndpoint() + "/" + bucket_files + "/" + filename;
-                // TODO: 存入数据库
-
+                upload(file);
             }
         }catch (Exception e){
-            log.error("文件上传异常" + e.getMessage());
+            log.error("文件上传异常:" + e.getMessage());
         }
+        return sb.toString();
+    }
+
+    /**
+     * 使用 minio 上传单张图片
+     * @param file
+     * @return
+     */
+    public String upload(MultipartFile file){
+        try {
+            // 判断桶是否存在
+            boolean bucketExists = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket_files).build());
+            if(!bucketExists){
+                // 创建一个新的桶
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket_files).build());
+            }
+            log.info("文件开始上传:{}", file);
+            // 获取文件的真实名称
+            String originalFilename = file.getOriginalFilename();
+            // 文件扩展名
+            String extendName = originalFilename.substring(originalFilename.lastIndexOf("."));
+            // 构建文件上传相关信息
+            PutObjectArgs args = PutObjectArgs.builder()
+                    .bucket(bucket_files)
+                    .object(originalFilename)
+                    .stream(file.getInputStream(), file.getSize(), -1)
+                    .contentType(file.getContentType())
+                    .build();
+            // 将文件上传到 minio 服务器
+            minioClient.putObject(args);
+            // 拼接文件上传地址，存入数据库
+            String url = minioConfig.getEndpoint() + "/" + bucket_files + "/" + originalFilename;
+            log.info("文件上传成功:{}， url:{}", originalFilename, url);
+            // TODO: 将文件上传路径以及绑定的维修单 id 上传到数据库文件表中
+
+        }catch (Exception e){
+            log.error("文件上传异常:" + e.getMessage());
+        }
+        return null;
     }
 }

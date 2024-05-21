@@ -47,4 +47,27 @@ public class FileController {
         return Result.success("上传成功");
     }
 
+    /**
+     * 图片文件批量上传至 minio
+     * @param files
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/batchUpload")
+    public Result<String> batchUpload(@RequestParam(name = "files") MultipartFile[] files) throws Exception{
+        fileService.batchUpload(files);
+        return Result.success("文件上传成功");
+    }
+
+    /**、
+     * 单张图片上传至 minio
+     * @param file
+     * @return
+     */
+    @PostMapping("/uploadImage")
+    public Result<String> upload(@RequestParam(name = "file") MultipartFile file){
+        fileService.upload(file);
+        return Result.success("文件上传成功");
+    }
+
 }
