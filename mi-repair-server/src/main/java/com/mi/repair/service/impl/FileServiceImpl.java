@@ -42,7 +42,7 @@ public class FileServiceImpl implements FileService {
     private MinioConfig minioConfig;
     @Autowired
     private MinioClient minioClient;
-    @Value("${mi-repair.bucket.files}")
+    @Value("${mi-repair.minio.bucket.files}")
     private String bucket_files;
 
     @Override
