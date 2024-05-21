@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mi.repair.mapper.MaterialReqMapper">
+    <insert id="submit" parameterType="com.mi.repair.entity.MaterialReq" useGeneratedKeys="true" keyProperty="id">
+        insert into material_req(
+            <if test="id != null">id,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="workerId != null">worker_id,</if>
+            <if test="workerName != null and workerName != ''">worker_name,</if>
+            <if test="materialId != null">material_id,</if>
+            <if test="materialName != null and materialName != ''">material_name,</if>
+            <if test="materialAmount != null and materialAmount != ''">material_amount,</if>
+            status, create_time, update_time
+        )values (
+            <if test="id != null">#{id},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="workerId != null">#{workerId},</if>
+            <if test="workerName != null">#{workerName},</if>
+            <if test="materialId != null">#{materialId},</if>
+            <if test="materialName != null">#{materialName},</if>
+            <if test="materialAmount != null">#{materialAmount},</if>
+            #{status}, #{createTime}, #{updateTime}
+        )
+    </insert>
+</mapper>

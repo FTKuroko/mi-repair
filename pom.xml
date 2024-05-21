@@ -8,13 +8,13 @@
         <version>2.7.3</version>
     </parent>
     <groupId>com</groupId>
-    <artifactId>mi_repair</artifactId>
+    <artifactId>mi-repair</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>mi_repair-common</module>
-        <module>mi_repair-pojo</module>
-        <module>mi_repair-server</module>
+        <module>mi-repair-common</module>
+        <module>mi-repair-pojo</module>
+        <module>mi-repair-server</module>
     </modules>
 
     <properties>
