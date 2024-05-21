@@ -1,20 +1,24 @@
 package com.mi.repair.enums;
 
+import lombok.Data;
+import lombok.Getter;
+
 /**
  * @author 李晴
  * @description 状态机状态枚举类
  */
-public enum RepairOrderStatus {
+@Getter
+public enum RepairOrderStatus{
     /*
        订单部分
     */
-    WAITING_FOR_WORKER_ACCEPTANCE("等待工程师接收", 1)
+    WAITING_FOR_WORKER_ACCEPTANCE("等待工程师接收", 0)
 
-    , WAITING_FOR_USER_CONFIRMATION("等待用户确认", 2)
+    , WAITING_FOR_USER_CONFIRMATION("等待用户确认", 1)
 
-    , CONFIRMED("用户已确认", 3)
+    , CONFIRMED("用户已确认", 2)
 
-    , CANCEL("用户已取消订单", 4)
+    , CANCEL("用户已取消订单", 3)
     /*
      *  维修部分
      */

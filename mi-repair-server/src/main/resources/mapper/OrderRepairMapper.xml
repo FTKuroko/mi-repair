@@ -2,7 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.mi.repair.mapper.OrderRepairMapper">
-
+    <resultMap id="OrderRepair" type="com.mi.repair.entity.OrderRepair">
+        <id column="id" property="id"/>
+        <id column="user_id" property="userId"/>
+        <id column="user_name" property="userName"/>
+        <id column="user_phone" property="userPhone"/>
+        <id column="user_addr" property="userAddr"/>
+        <id column="goods_info" property="goodsInfo"/>
+        <id column="sn" property="sn"/>
+        <id column="description" property="desc"/>
+        <id column="status" property="status"/>
+        <id column="create_time" property="createTime"/>
+        <id column="update_time" property="updateTime"/>
+    </resultMap>
     <insert id="submit" parameterType="com.mi.repair.entity.OrderRepair" useGeneratedKeys="true" keyProperty="id">
         insert into repair_order(
             <if test="id != null">id,</if>
@@ -36,7 +48,7 @@
         </where>
     </update>
 
-    <select id="pageQueryByUserId" resultType="com.mi.repair.entity.OrderRepair">
+    <select id="pageQueryByUserId" resultMap="OrderRepair">
         select * from repair_order
         <where>
             <if test="userId != null and userId != ''">
