@@ -1,10 +1,5 @@
 package com.mi.repair.enums;
 
-
-/**
- * @author 李晴
- * @description 状态机事件枚举类
- */
 public enum RepairOrderEvent {
     USER_CANCEL_ORDER("用户取消订单")
 
@@ -12,7 +7,9 @@ public enum RepairOrderEvent {
 
     ,USER_CONFIRM_ORDER("用户确认")
 
-    ,WORKER_INSPECTION("工程师检测")
+    ,WORKER_INSPECTION_SUCCESS("工程师检测成功")
+
+    ,WORKER_INSPECTION_FAILED("工程师检测失败")
 
     ,APPLICATION_MATERIALS_SUCCESS("申请材料成功")
 
@@ -25,6 +22,8 @@ public enum RepairOrderEvent {
     ,RETEST_SUCCESS ("复检成功")
 
     ,RETEST_FAILED ("复检失败")
+
+    ,RETEST_NUMBER_OF_EXCEEDANCES("复检超出次数")
 
     ,USER_PAY("用户支付")
 

@@ -1,9 +1,5 @@
 package com.mi.repair.enums;
 
-/**
- * @author 李晴
- * @description 状态机状态枚举类
- */
 public enum RepairOrderStatus {
     /*
        订单部分
@@ -18,10 +14,6 @@ public enum RepairOrderStatus {
     /*
      *  维修部分
      */
-    , PASS_WORKER_INSPECTION("通过工程师检测", 11)
-
-    , NOT_PASS_WORKER_INSPECTION("工程师检测不通过", 12)
-
     , APPLICATION_MATERIALS("申请材料", 13)
 
     , WAITING_MATERIALS("等待材料", 14)
@@ -29,14 +21,14 @@ public enum RepairOrderStatus {
     , REPAIR("维修", 15)
 
     , RETEST("复检", 16)
+
+    , REPAIR_FAILED("维修失败",17)
     /*
      *  支付模块
      */
     , WAITING_PAY("等待支付", 21)
 
     , PAYED("已支付", 22)
-
-    , UNPAID("未支付", 23)
 
     , DONE("已完成", 24);
 

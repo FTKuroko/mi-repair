@@ -24,16 +24,16 @@ public class RepairOrderProcessor {
     private StateMachine<RepairOrderStatus, RepairOrderEvent> repairOrderStateMachine;
 
     public boolean process(OrderRepair repairOrder, RepairOrderEvent repairOrderEvent) {
-
         Message<RepairOrderEvent> message = MessageBuilder.withPayload(repairOrderEvent).setHeader("repairOrder",repairOrder).build();
         boolean flag = sendEvent(message);
+
         return flag;
     }
 
     @SneakyThrows
     private boolean sendEvent(Message<RepairOrderEvent> message) {
         OrderRepair repairOrder = (OrderRepair) message.getHeaders().get("repairOrder");
-        repairOrderStateMachine.start();
+        //repairOrderStateMachine.start();
         boolean result = repairOrderStateMachine.sendEvent(message);
         return result;
     }
