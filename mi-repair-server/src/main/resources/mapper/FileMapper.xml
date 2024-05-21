@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mi.repair.mapper.FileMapper">
+
+    <insert id="saveFileInfos" parameterType="File" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO file (type ,order_id,path)
+        VALUES (#{type}, #{orderId}, #{path})
+    </insert>
+
+    <select id="getFiles" parameterType="com.mi.repair.dto.FileDTO" resultType="File">
+        SELECT id,path FROM file
+        WHERE order_id = #{orderId}
+        AND type = #{type}
+    </select>
+
+</mapper>

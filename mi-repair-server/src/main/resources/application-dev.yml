@@ -1,0 +1,17 @@
+mi_repair:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    host: localhost
+    port: 3306
+    database: repairsys
+    username: root
+    password: root
+file:
+#  upload: "uploads\\"
+  upload: "D:\\code\\mi_repair\\uploads\\"
+#pagehelper分页插件配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
