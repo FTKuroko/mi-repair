@@ -1,7 +1,7 @@
-package com.mi_repair.controller.pay;
+package com.mi.repair.controller.pay;
 
+import com.mi.repair.utils.PayUtil;
 import com.mi_repair.entity.AliPayPojo;
-import com.mi_repair.utils.PayUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
