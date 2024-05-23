@@ -1,4 +1,4 @@
-package com.mi_repair.utils;
+package com.mi.repair.utils;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
