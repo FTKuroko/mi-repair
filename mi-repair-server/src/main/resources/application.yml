@@ -13,9 +13,9 @@ spring:
       username: ${mi_repair.datasource.username}
       password: ${mi_repair.datasource.password}
   redis:
-    host: 192.168.130.100
+    host: 127.0.0.1
     port: 6379
-    password: 177412lh
+    password:
   servlet:
     multipart:
       max-file-size: 100MB
