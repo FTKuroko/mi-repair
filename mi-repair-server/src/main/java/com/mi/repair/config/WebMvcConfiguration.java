@@ -1,6 +1,7 @@
 package com.mi.repair.config;
 
-import com.mi.repair.interceptor.JwtTokenInterceptor;
+import com.mi.repair.interceptor.JwtTokenIWorkernterceptor;
+import com.mi.repair.interceptor.JwtTokenUserInterceptor;
 import com.mi.repair.json.JacksonObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +31,21 @@ import java.util.List;
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
     @Autowired
-    private JwtTokenInterceptor jwtTokenInterceptor;
+    private JwtTokenUserInterceptor jwtTokenInterceptor;
+
+    @Autowired
+    private JwtTokenIWorkernterceptor jwtTokenIWorkernterceptor;
 
     protected void addInterceptors(InterceptorRegistry registry){
         registry.addInterceptor(jwtTokenInterceptor)
-                .addPathPatterns("/**/**")
-                .excludePathPatterns("/**/login");
+                .addPathPatterns("/user/**")
+                .excludePathPatterns("/user/login")
+                .excludePathPatterns("/user/reg");
+
+        registry.addInterceptor(jwtTokenIWorkernterceptor)
+                .addPathPatterns("/worker/**")
+                .excludePathPatterns("/worker/login")
+                .excludePathPatterns("/worker/reg");
     }
 
     /**
