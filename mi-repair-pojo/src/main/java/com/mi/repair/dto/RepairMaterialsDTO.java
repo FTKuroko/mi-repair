@@ -17,5 +17,5 @@ public class RepairMaterialsDTO {
     private Long orderId;
     private String workerName;
     private String materialName;
-    private int materialAmount;
+    private Integer materialAmount;
 }

@@ -131,10 +131,23 @@ public class OrderRepairServiceImpl implements OrderRepairService {
     @Override
     public PageResult pageQuery(WorkerOrderPageQueryDTO workerOrderPageQueryDTO) {
         PageHelper.startPage(workerOrderPageQueryDTO.getPage(), workerOrderPageQueryDTO.getPageSize());
+        Long id = BaseContext.getCurrentId();
+        workerOrderPageQueryDTO.setWorkerId(id);
         Page<OrderRepair> page = orderRepairMapper.pageQueryByWorker(workerOrderPageQueryDTO);
         long total = page.getTotal();
         List<OrderRepair> result = page.getResult();
-        return new PageResult(total, result);
+        List<OrderRepairVO> pageInfo = new ArrayList<>(result.size());
+        for(OrderRepair order : result){
+            OrderRepairVO orderVO = new OrderRepairVO();
+            BeanUtils.copyProperties(order, orderVO);
+            for(RepairOrderStatus status : RepairOrderStatus.values()){
+                if(order.getStatus().equals(status.getCode())){
+                    orderVO.setStatusInfo(status.getDescription());
+                }
+            }
+            pageInfo.add(orderVO);
+        }
+        return new PageResult(total, pageInfo);
     }
 
     @Override

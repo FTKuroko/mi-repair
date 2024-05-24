@@ -10,7 +10,7 @@
         <id column="user_addr" property="userAddr"/>
         <id column="goods_info" property="goodsInfo"/>
         <id column="sn" property="sn"/>
-        <id column="description" property="desc"/>
+        <id column="description" property="description"/>
         <id column="status" property="status"/>
         <id column="create_time" property="createTime"/>
         <id column="update_time" property="updateTime"/>
@@ -54,6 +54,9 @@
             <if test="userId != null and userId != ''">
                 and user_id = #{userId}
             </if>
+            <if test="id != null and id != ''">
+            and id = #{id}
+            </if>
         </where>
         order by create_time desc
     </select>
@@ -81,11 +84,26 @@
         </where>
     </update>
 
-    <select id="pageQueryByWorker" resultType="com.mi.repair.entity.OrderRepair">
+<!--    <select id="pageQueryByWorker" resultType="com.mi.repair.entity.OrderRepair">-->
+<!--        select * from repair_order-->
+<!--        <where>-->
+<!--            <if test="id != null and id != ''">and id = #{orderId}</if>-->
+<!--            <if test="startTime != null and startTime != ''">and createTime = #{startTime}</if>-->
+<!--        </where>-->
+<!--        order by create_time desc-->
+<!--    </select>-->
+    <select id="pageQueryByWorker" resultType="OrderRepair">
         select * from repair_order
         <where>
-            <if test="id != null and id != ''">and id = #{orderId}</if>
-            <if test="startTime != null and startTime != ''">and createTime = #{startTime}</if>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status} and worker_id = #{workerId}
+            </if>
+            <if test="status == null or status == ''">
+                and status = 0 or worker_id = #{workerId}
+            </if>
         </where>
         order by create_time desc
     </select>
