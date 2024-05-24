@@ -32,7 +32,7 @@ public class WorkOrderRepairController {
                 Result.error("工程师接单失败");
     }
 
-    @GetMapping("/page")
+    @PostMapping("/page")
     @ApiOperation("工程师查询订单")
     public Result<PageResult> page(@RequestBody WorkerOrderPageQueryDTO workerOrderPageQueryDTO){
         log.info("工程师查询订单:{}", workerOrderPageQueryDTO);

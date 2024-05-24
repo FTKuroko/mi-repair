@@ -31,7 +31,7 @@ public class WorkerController {
 
     @PostMapping("/reg")
     public Result<WorkerLoginVO> register(@RequestBody WorkerRegDTO dto){
-        log.info("用户登录:{}", dto);
+        log.info("工程师注册:{}", dto);
         WorkerLoginVO user = workerService.register(dto);
         return Result.success(user);
     }
