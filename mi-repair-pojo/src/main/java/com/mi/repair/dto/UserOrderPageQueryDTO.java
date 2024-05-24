@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 public class UserOrderPageQueryDTO {
     private Long userId;
-    private int page;
-    private int pageSize;
+    private Integer status;
+    private Integer page;
+    private Integer pageSize;
 }

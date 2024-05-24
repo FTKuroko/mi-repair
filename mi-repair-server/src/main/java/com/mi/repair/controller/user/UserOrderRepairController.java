@@ -42,7 +42,7 @@ public class UserOrderRepairController {
                 Result.error("用户确认失败");
     }
 
-    @GetMapping("/page")
+    @PostMapping("/page")
     @ApiOperation("用户查询订单")
     public Result<PageResult> pageQuery(@RequestBody UserOrderPageQueryDTO userOrderPageQueryDTO){
         log.info("用户订单分页查询:{}", userOrderPageQueryDTO);
