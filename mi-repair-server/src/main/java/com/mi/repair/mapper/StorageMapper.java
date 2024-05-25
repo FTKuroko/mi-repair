@@ -19,4 +19,6 @@ public interface StorageMapper {
     void delStorage(StorageDTO dto);
 
     Storage getStorageByName(String name);
+
+    Storage getStorage(Storage storage);
 }
