@@ -19,9 +19,9 @@ public class WorkerOrderPageQueryDTO {
 
     private LocalDateTime endTime;
 
-    private int status;
+    private Integer status;
 
-    private int page;
+    private Integer page;
 
-    private int pageSize;
+    private Integer pageSize;
 }

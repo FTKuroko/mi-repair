@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
                 claims);
         UserLoginVO vo = UserLoginVO.builder()
                 .id(login.getId())
-                .userName(login.getName())
+                .userName(login.getUserName())
                 .phone(login.getPhone())
                 .token(token)
                 .build();

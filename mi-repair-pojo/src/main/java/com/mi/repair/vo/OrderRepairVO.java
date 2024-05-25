@@ -29,7 +29,7 @@ public class OrderRepairVO implements Serializable {
 
     private String goodsInfo;
     private String sn;
-    private String desc;
+    private String description;
 
     private int status;
     private String statusInfo;      // 将工单状态详细信息返回，不再是返回状态码

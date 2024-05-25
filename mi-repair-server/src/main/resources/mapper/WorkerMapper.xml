@@ -5,8 +5,8 @@
 <mapper namespace="com.mi.repair.mapper.WorkerMapper">
 
     <insert id="register" parameterType="com.mi.repair.entity.Worker"  useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO workers (name, password, phone)
-        VALUES (#{name}, #{password}, #{phone})
+        INSERT INTO workers (name, workerName,password, phone)
+        VALUES (#{name},#{workerName}, #{password}, #{phone})
     </insert>
     <select id="login" parameterType="com.mi.repair.entity.Worker" resultType="Worker">
         SELECT * FROM workers

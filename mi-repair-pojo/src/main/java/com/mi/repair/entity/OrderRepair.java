@@ -25,6 +25,7 @@ public class OrderRepair implements Serializable {
     private Long id;
 
     private Long userId;
+    private Long workerId;
 
     private String userName;
 
@@ -36,7 +37,7 @@ public class OrderRepair implements Serializable {
 
     private String sn;
 
-    private String desc;
+    private String description;
 
     private Integer status;
 
