@@ -1,5 +1,6 @@
 package com.mi.repair.controller.user;
 
+import com.mi.repair.context.BaseContext;
 import com.mi.repair.dto.UserLoginDTO;
 import com.mi.repair.vo.UserLoginVO;
 import com.mi.repair.vo.UserRegVO;
@@ -41,6 +42,14 @@ public class UserController {
         log.info("用户注册:{}", dto);
         UserRegVO user = userService.register(dto);
         return Result.success(user);
+    }
+
+    @PutMapping("/logout")
+    public Result<String> logOut(){
+        Long userId = BaseContext.getCurrentId();
+        log.info("用户登出:{}",userId);
+        BaseContext.removeCurrentId();
+        return Result.success("用户登出");
     }
 
 }

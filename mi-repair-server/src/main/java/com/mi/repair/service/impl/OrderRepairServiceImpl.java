@@ -7,6 +7,7 @@ import com.mi.repair.context.BaseContext;
 import com.mi.repair.dto.OrderRepairSubmitDTO;
 import com.mi.repair.dto.UserOrderPageQueryDTO;
 import com.mi.repair.enums.RepairOrderStatus;
+import com.mi.repair.enums.StorageType;
 import com.mi.repair.mapper.OrderRepairMapper;
 import com.mi.repair.result.PageResult;
 import com.mi.repair.service.OrderRepairService;
@@ -137,15 +138,42 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         return new PageResult(total, result);
     }
 
+    /**
+     * 同时申请多种材料
+     * @param list  申请的材料列表
+     * @return
+     */
     @Override
-    public RepairMaterialsVO applyMaterials(RepairMaterialsDTO repairMaterialsDTO) {
+    public List<RepairMaterialsVO> applyMaterials(List<RepairMaterialsDTO> list) {
+        List<RepairMaterialsVO> voList = new ArrayList<>();
+        for(RepairMaterialsDTO repairMaterialsDTO : list){
+            RepairMaterialsVO vo = applyOne(repairMaterialsDTO);
+            voList.add(vo);
+        }
+        return voList;
+    }
+
+    /**
+     * 只申请一种材料
+     * @param repairMaterialsDTO
+     * @return
+     */
+    public RepairMaterialsVO applyOne(RepairMaterialsDTO repairMaterialsDTO) {
         MaterialReq materialReq = new MaterialReq();
+        Storage storage = new Storage();
         BeanUtils.copyProperties(repairMaterialsDTO, materialReq);
+        storage.setName(repairMaterialsDTO.getMaterialName());
+        for(StorageType storageType : StorageType.values()){
+            if(storageType.getName().equals(repairMaterialsDTO.getMaterialTypeName())){
+                storage.setType(storageType.getCode());
+            }
+        }
         // 剩余字段填充
         // 获取当前工程师id
         Long workerId = BaseContext.getCurrentId();
         materialReq.setWorkerId(workerId);
-        Storage material = storageMapper.getStorageByName(repairMaterialsDTO.getMaterialName());
+        Storage material = storageMapper.getStorage(storage);
+        //Storage material = storageMapper.getStorageByName(repairMaterialsDTO.getMaterialName());
         if(material.getAmount() < repairMaterialsDTO.getMaterialAmount()){
             throw new BaseException("材料不足");
         }

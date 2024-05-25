@@ -8,6 +8,8 @@ import com.mi.repair.dto.WorkerOrderPageQueryDTO;
 import com.mi.repair.vo.OrderRepairSubmitVO;
 import com.mi.repair.vo.RepairMaterialsVO;
 
+import java.util.List;
+
 /**
  * @author Kuroko
  * @description
@@ -58,8 +60,8 @@ public interface OrderRepairService {
 
     /**
      * 工程师申请维修材料
-     * @param repairMaterialsDTO
+     * @param list
      * @return
      */
-    RepairMaterialsVO applyMaterials(RepairMaterialsDTO repairMaterialsDTO);
+    List<RepairMaterialsVO> applyMaterials(List<RepairMaterialsDTO> list);
 }

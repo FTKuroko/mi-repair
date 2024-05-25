@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @author Kuroko
  * @description
@@ -27,9 +29,9 @@ public class WorkerRepairController {
 
     @PostMapping("/materials")
     @ApiOperation("申请维修材料")
-    public Result<RepairMaterialsVO> applyMaterials(@RequestBody RepairMaterialsDTO repairMaterialsDTO){
-        log.info("工程师申请维修材料:{}", repairMaterialsDTO);
-        RepairMaterialsVO materialsVO = orderRepairService.applyMaterials(repairMaterialsDTO);
+    public Result<List<RepairMaterialsVO>> applyMaterials(@RequestBody List<RepairMaterialsDTO> list){
+        log.info("工程师申请维修材料:{}", list);
+        List<RepairMaterialsVO> materialsVO = orderRepairService.applyMaterials(list);
         return Result.success(materialsVO);
     }
 }
