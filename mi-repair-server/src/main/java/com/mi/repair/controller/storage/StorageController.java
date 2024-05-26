@@ -1,17 +1,15 @@
 package com.mi.repair.controller.storage;
 
-import com.mi.repair.Req.Request;
 import com.mi.repair.dto.StorageDTO;
+import com.mi.repair.dto.WorkerStoragePageQueryDTO;
+import com.mi.repair.result.PageResult;
 import com.mi.repair.result.Result;
 import com.mi.repair.service.StorageService;
-import com.mi.repair.vo.StorageVO;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
 /**
  * @author 罗慧
  */
@@ -26,17 +24,15 @@ public class StorageController {
 
     /**
      * 查询库存
-     * @param request
+     * @param queryDTO
      * @return
      */
-    @GetMapping("/get")
-    public Result<List<StorageVO>> getStorageList(@RequestBody Request request){
-        try{
-            List<StorageVO> list = storageService.getStorageList(request);
-            return Result.success(list);
-        }catch (Exception e){
-            return Result.error("");
-        }
+    @PostMapping("/page")
+    @ApiOperation("工程师查询库存")
+    public Result<PageResult> getStorageList(@RequestBody WorkerStoragePageQueryDTO queryDTO){
+        log.info("工程师查询库存:{}", queryDTO);
+        PageResult list = storageService.getStorageList(queryDTO);
+        return Result.success(list);
     }
 
     /**

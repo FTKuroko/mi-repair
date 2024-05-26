@@ -1,5 +1,7 @@
 package com.mi.repair.mapper;
 
+import com.github.pagehelper.Page;
+import com.mi.repair.dto.MaterialReqPageQueryDTO;
 import com.mi.repair.entity.MaterialReq;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,4 +14,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface MaterialReqMapper {
 
     long submit(MaterialReq materialReq);
+
+    Page<MaterialReq> pageQuery(MaterialReqPageQueryDTO queryDTO);
 }

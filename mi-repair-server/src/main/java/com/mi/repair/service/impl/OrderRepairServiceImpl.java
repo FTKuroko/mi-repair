@@ -4,15 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.mi.repair.context.BaseContext;
-import com.mi.repair.dto.OrderRepairSubmitDTO;
-import com.mi.repair.dto.UserOrderPageQueryDTO;
+import com.mi.repair.dto.*;
+import com.mi.repair.enums.MaterialReqStatus;
 import com.mi.repair.enums.RepairOrderStatus;
 import com.mi.repair.enums.StorageType;
 import com.mi.repair.mapper.OrderRepairMapper;
 import com.mi.repair.result.PageResult;
 import com.mi.repair.service.OrderRepairService;
-import com.mi.repair.dto.RepairMaterialsDTO;
-import com.mi.repair.dto.WorkerOrderPageQueryDTO;
 import com.mi.repair.entity.MaterialReq;
 import com.mi.repair.entity.OrderRepair;
 import com.mi.repair.entity.Storage;
@@ -173,6 +171,40 @@ public class OrderRepairServiceImpl implements OrderRepairService {
      */
     public RepairMaterialsVO applyOne(RepairMaterialsDTO repairMaterialsDTO) {
         MaterialReq materialReq = new MaterialReq();
+        // 用于删减库存
+        StorageDTO storageDTO = new StorageDTO();
+        storageDTO.setId(repairMaterialsDTO.getId());
+        storageDTO.setAmount(repairMaterialsDTO.getMaterialAmount());
+        BeanUtils.copyProperties(repairMaterialsDTO, materialReq);
+        // 剩余字段填充
+        // 获取当前工程师id
+        Long workerId = BaseContext.getCurrentId();
+        materialReq.setWorkerId(workerId);
+        Storage material = storageMapper.getStorage(storageDTO.getId());
+        if(material.getAmount() < repairMaterialsDTO.getMaterialAmount()){
+            materialReq.setStatus(MaterialReqStatus.OUT_OF_STOCK.getCode());
+            throw new BaseException("材料不足");
+        }{
+            // 删减库存
+            materialReq.setStatus(MaterialReqStatus.SUCCESS.getCode());
+            storageMapper.subStorage(storageDTO);
+        }
+        // 前端会传来id，但是这是对应storage的id
+        materialReq.setId(null);
+        materialReq.setMaterialId(material.getId());
+        materialReq.setStatus(0);
+        LocalDateTime time = LocalDateTime.now();
+        materialReq.setCreateTime(time);
+        materialReq.setUpdateTime(time);
+
+        // 插入数据库
+        long i = matrialReqMapper.submit(materialReq);
+        RepairMaterialsVO materialsVO = new RepairMaterialsVO(i, time);
+        return materialsVO;
+    }
+    public RepairMaterialsVO applyOne1(RepairMaterialsDTO repairMaterialsDTO) {
+        MaterialReq materialReq = new MaterialReq();
+        Long storageId = repairMaterialsDTO.getId();
         Storage storage = new Storage();
         BeanUtils.copyProperties(repairMaterialsDTO, materialReq);
         storage.setName(repairMaterialsDTO.getMaterialName());
@@ -185,7 +217,7 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         // 获取当前工程师id
         Long workerId = BaseContext.getCurrentId();
         materialReq.setWorkerId(workerId);
-        Storage material = storageMapper.getStorage(storage);
+        Storage material = storageMapper.getStorage(storageId);
         //Storage material = storageMapper.getStorageByName(repairMaterialsDTO.getMaterialName());
         if(material.getAmount() < repairMaterialsDTO.getMaterialAmount()){
             throw new BaseException("材料不足");

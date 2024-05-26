@@ -6,13 +6,12 @@ import lombok.Getter;
  * @author 罗慧
  */
 @Getter
-public enum StorageType {
-    PHONE("手机",1),
-    HOUSE_APPLIANCE("车",2),
-    CAR("手表",3);
+public enum MaterialReqStatus {
+    OUT_OF_STOCK("库存不足",1),
+    SUCCESS("申请成功",2);
     String name;
     Integer code;
-    StorageType(String name,Integer code){
+    MaterialReqStatus(String name,Integer code){
         this.name = name;
         this.code = code;
     }

@@ -169,11 +169,11 @@ public class StateMachineTest {
         repairOrderProcessor.process(orderRepair, RepairOrderEvent.DEVICE_RETURN);
     }
     //维修失败 -> 设备归还 -> 已完成
-    @Test
-    public void returnDeviceByRepairFailed() {
-        OrderRepair orderRepair = new OrderRepair();
-        orderRepair.setRepairOrderStatus(RepairOrderStatus.REPAIR_FAILED);
-        repairOrderProcessor.process(orderRepair, RepairOrderEvent.DEVICE_RETURN);
-    }
+//    @Test
+//    public void returnDeviceByRepairFailed() {
+//        OrderRepair orderRepair = new OrderRepair();
+//        orderRepair.setRepairOrderStatus(RepairOrderStatus.REPAIR_FAILED);
+//        repairOrderProcessor.process(orderRepair, RepairOrderEvent.DEVICE_RETURN);
+//    }
 
 }

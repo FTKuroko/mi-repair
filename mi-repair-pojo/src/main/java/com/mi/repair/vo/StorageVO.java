@@ -22,7 +22,8 @@ public class StorageVO implements Serializable {
 
     private Long id;
 
-    private String status;
+    private String typeInfo;
+    private Integer type;
 
     private String name;
 

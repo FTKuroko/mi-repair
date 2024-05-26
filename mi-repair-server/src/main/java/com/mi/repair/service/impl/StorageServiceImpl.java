@@ -1,8 +1,12 @@
 package com.mi.repair.service.impl;
 
+
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.mi.repair.dto.WorkerStoragePageQueryDTO;
 import com.mi.repair.mapper.StorageMapper;
+import com.mi.repair.result.PageResult;
 import com.mi.repair.service.StorageService;
 import com.mi.repair.Req.Request;
 import com.mi.repair.dto.StorageDTO;
@@ -27,22 +31,23 @@ public class StorageServiceImpl implements StorageService {
     private StorageMapper storageMapper;
 
     @Override
-    public List<StorageVO> getStorageList(Request request) {
-        PageHelper.startPage(request.getPage(),request.getCount());
-        List<Storage> list = storageMapper.getStorageList(request);
-        List<Storage> listPage = new PageInfo<Storage>(list).getList();
-        List<StorageVO> result = new ArrayList<>();
-        for (Storage storage : listPage) {
+    public PageResult getStorageList(WorkerStoragePageQueryDTO queryDTO) {
+        PageHelper.startPage(queryDTO.getPage(), queryDTO.getPageSize());
+        Page<Storage> page = storageMapper.getStorageList(queryDTO);
+        List<Storage> result = page.getResult();
+        List<StorageVO> pageResult = new ArrayList<>(result.size());
+        Long total = page.getTotal();
+        for (Storage storage : result) {
             StorageVO storageVO = new StorageVO();
             BeanUtils.copyProperties(storage, storageVO);
             for (StorageType value : StorageType.values()) {
-                if(value.getCode() == storage.getType()){
-                    storageVO.setStatus(value.getName());
+                if(value.getCode() == storageVO.getType()){
+                    storageVO.setTypeInfo(value.getName());
                 }
             }
-            result.add(storageVO);
+            pageResult.add(storageVO);
         }
-        return result;
+        return new PageResult(total, pageResult);
     }
 
     @Override

@@ -24,4 +24,18 @@
             #{status}, #{createTime}, #{updateTime}
         )
     </insert>
+    <select id="pageQuery" resultType="com.mi.repair.entity.MaterialReq">
+        select * from material_req
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="materialName != null or materialName != ''">
+                and material_name = #{materialName}
+            </if>
+        </where>
+    </select>
 </mapper>
