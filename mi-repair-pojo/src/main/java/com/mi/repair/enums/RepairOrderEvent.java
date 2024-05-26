@@ -1,5 +1,6 @@
 package com.mi.repair.enums;
 
+
 public enum RepairOrderEvent {
     USER_CANCEL_ORDER("用户取消订单")
 
