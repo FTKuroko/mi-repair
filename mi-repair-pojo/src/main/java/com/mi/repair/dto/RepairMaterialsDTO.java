@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 /**
  * @author Kuroko
  * @description
@@ -17,5 +19,6 @@ public class RepairMaterialsDTO {
     private Long orderId;
     private String workerName;
     private String materialName;
+    private String materialTypeName;    // 材料类型名称
     private int materialAmount;
 }

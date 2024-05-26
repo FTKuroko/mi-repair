@@ -44,4 +44,12 @@
             <if test="name != null and name != ''">and name = #{name}</if>
         </where>
     </select>
+
+    <select id="getStorage" resultType="com.mi.repair.entity.Storage">
+        select * from storage
+        <where>
+            <if test="name != null and name != ''">and name like #{name}</if>
+            <if test="type != null and type != ''">and type = #{type}</if>
+        </where>
+    </select>
 </mapper>

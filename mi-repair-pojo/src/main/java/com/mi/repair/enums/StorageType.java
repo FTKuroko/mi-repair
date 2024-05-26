@@ -1,8 +1,11 @@
 package com.mi.repair.enums;
 
+import lombok.Getter;
+
 /**
  * @author 罗慧
  */
+@Getter
 public enum StorageType {
     PHONE("车窗",1),
     HOUSE_APPLIANCE("镜子",2),
