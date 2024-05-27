@@ -1,6 +1,6 @@
 package com.mi.repair.state_machine;
 
-import com.mi.repair.entity.OrderRepair;
+import com.mi.repair.entity.StateMachineRepairOrder;
 import com.mi.repair.enums.RepairOrderEvent;
 import com.mi.repair.enums.RepairOrderStatus;
 import com.mi.repair.statemachine.RepairOrderProcessor;
@@ -19,7 +19,7 @@ public class RedisPersistTest {
 
     @Resource
     RepairOrderProcessor repairOrderProcessor;
-    @Resource(name="orderRedisPersister")
+    @Resource(name="repairOrderRedisPersister")
     private StateMachinePersister<RepairOrderStatus, RepairOrderEvent, String> orderRedisPersister;
 
 //    @Test
@@ -32,7 +32,7 @@ public class RedisPersistTest {
 
     @Test
     public void testRedisPersister() throws Exception {
-        OrderRepair orderRepair = new OrderRepair();
+        StateMachineRepairOrder orderRepair = new StateMachineRepairOrder();
         orderRepair.setId(2L);
         repairOrderProcessor.process(orderRepair,RepairOrderEvent.WORKER_ACCEPT_ORDER);
         orderRedisPersister.persist(repairOrderStateMachine, String.valueOf(orderRepair.getId()));
@@ -40,7 +40,7 @@ public class RedisPersistTest {
 
     @Test
     public void testRestore() throws Exception {
-        Long id = 2L;
+        Long id = 11L;
         StateMachine<RepairOrderStatus, RepairOrderEvent> restore = orderRedisPersister.restore(repairOrderStateMachine, String.valueOf(id));
         System.out.println("恢复状态机后的状态为：" + restore.getState().getId());
     }

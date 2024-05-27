@@ -23,7 +23,7 @@ public class StateMachinePersistConfig {
      *
      * @return
      */
-    @Bean(name = "orderRedisPersister")
+    @Bean(name = "repairOrderRedisPersister")
     public RedisStateMachinePersister<RepairOrderStatus, RepairOrderEvent> redisPersister() {
         return new RedisStateMachinePersister<>(redisPersist());
     }

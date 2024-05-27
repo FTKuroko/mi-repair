@@ -1,6 +1,6 @@
 package com.mi.repair.state_machine;
 
-import com.mi.repair.entity.OrderRepair;
+import com.mi.repair.entity.StateMachineRepairOrder;
 import com.mi.repair.enums.RepairOrderEvent;
 import com.mi.repair.enums.RepairOrderStatus;
 import com.mi.repair.statemachine.RepairOrderProcessor;
@@ -18,7 +18,7 @@ public class StateMachineTest {
     @Test
     public void test() {
         System.out.println("------------等待工程师接单------------------");
-        OrderRepair orderRepair = new OrderRepair();
+        StateMachineRepairOrder orderRepair = new StateMachineRepairOrder();
         orderRepair.setRepairOrderStatus(RepairOrderStatus.WAITING_FOR_WORKER_ACCEPTANCE);
         repairOrderProcessor.process(orderRepair, RepairOrderEvent.WORKER_ACCEPT_ORDER);
         System.out.println("------------等待用户确认------------------");
@@ -44,36 +44,29 @@ public class StateMachineTest {
         repairOrderProcessor.process(orderRepair, RepairOrderEvent.DEVICE_RETURN);
     }
 
-//    @Test
-//    public void testRestore() throws Exception {
-////        String id = "88888888";
-//        orderRedisPersister.restore(repairOrderStateMachine, "88888888");
-//        System.out.println("恢复状态机后的状态为：" + repairOrderStateMachine.getState().getId());
-//    }
-
     @Test
     public void workerAcceptOrder() {
-        OrderRepair orderRepair = new OrderRepair();
+        StateMachineRepairOrder orderRepair = new StateMachineRepairOrder();
         orderRepair.setRepairOrderStatus(RepairOrderStatus.WAITING_FOR_WORKER_ACCEPTANCE);
         repairOrderProcessor.process(orderRepair, RepairOrderEvent.WORKER_ACCEPT_ORDER);
     }
 
     @Test
     public void userCancelOrderByWaitingWorker() {
-        OrderRepair orderRepair = new OrderRepair();
+        StateMachineRepairOrder orderRepair = new StateMachineRepairOrder();
         orderRepair.setRepairOrderStatus(RepairOrderStatus.WAITING_FOR_WORKER_ACCEPTANCE);
         repairOrderProcessor.process(orderRepair, RepairOrderEvent.USER_CANCEL_ORDER);
     }
 
     @Test
     public void userConfirmOrder() {
-        OrderRepair orderRepair = new OrderRepair();
+        StateMachineRepairOrder orderRepair = new StateMachineRepairOrder();
         orderRepair.setRepairOrderStatus(RepairOrderStatus.WAITING_FOR_USER_CONFIRMATION);
         repairOrderProcessor.process(orderRepair, RepairOrderEvent.USER_CONFIRM_ORDER);
     }
     @Test
     public void userCancelOrderByUserConfirmation() {
-        OrderRepair orderRepair = new OrderRepair();
+        StateMachineRepairOrder orderRepair = new StateMachineRepairOrder();
         orderRepair.setRepairOrderStatus(RepairOrderStatus.WAITING_FOR_USER_CONFIRMATION);
         repairOrderProcessor.process(orderRepair, RepairOrderEvent.USER_CANCEL_ORDER);
     }
