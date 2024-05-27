@@ -5,7 +5,6 @@ import com.github.pagehelper.PageHelper;
 import com.mi.repair.dto.MaterialReqPageQueryDTO;
 import com.mi.repair.entity.MaterialReq;
 import com.mi.repair.enums.MaterialReqStatus;
-import com.mi.repair.enums.RepairOrderStatus;
 import com.mi.repair.mapper.MaterialReqMapper;
 import com.mi.repair.result.PageResult;
 import com.mi.repair.service.MaterialReqService;
@@ -38,8 +37,8 @@ public class MaterialReqServiceImpl implements MaterialReqService {
                 if(entity.getStatus().equals(status.getCode())){
                     vo.setStatusInfo(status.getName());
                 }
-                pageInfo.add(vo);
             }
+            pageInfo.add(vo);
         }
         return new PageResult(total, pageInfo);
     }

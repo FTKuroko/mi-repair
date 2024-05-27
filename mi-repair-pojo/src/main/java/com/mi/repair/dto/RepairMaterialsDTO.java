@@ -21,4 +21,5 @@ public class RepairMaterialsDTO {
     private String materialName;
     private String materialTypeName;    // 材料类型名称
     private int materialAmount;// 材料数量
+    private BigDecimal priceSum;
 }

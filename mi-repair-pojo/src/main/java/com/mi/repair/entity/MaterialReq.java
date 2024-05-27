@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -33,6 +34,8 @@ public class MaterialReq implements Serializable {
     private String materialName;
 
     private Integer materialAmount;
+
+    private BigDecimal priceSum;
 
     private Integer status;
 
