@@ -6,7 +6,7 @@ import lombok.Data;
  */
 @Data
 public class MaterialReqPageQueryDTO {
-    private Long id;
+    private Long workerId;
 
     private String materialName;
 
