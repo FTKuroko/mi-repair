@@ -2,6 +2,7 @@ package com.mi.repair.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.mi.repair.context.BaseContext;
 import com.mi.repair.dto.MaterialReqPageQueryDTO;
 import com.mi.repair.entity.MaterialReq;
 import com.mi.repair.enums.MaterialReqStatus;
@@ -25,6 +26,8 @@ public class MaterialReqServiceImpl implements MaterialReqService {
     MaterialReqMapper materialReqMapper;
     @Override
     public PageResult pageQuery(MaterialReqPageQueryDTO queryDTO) {
+        Long id = BaseContext.getCurrentId();
+        queryDTO.setWorkerId(id);
         PageHelper.startPage(queryDTO.getPage(), queryDTO.getPageSize());
         Page<MaterialReq> page = materialReqMapper.pageQuery(queryDTO);
         long total = page.getTotal();

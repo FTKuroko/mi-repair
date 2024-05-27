@@ -87,10 +87,11 @@ public class OrderRepairServiceImpl implements OrderRepairService {
 
     @Override
     public PageResult pageQuery(UserOrderPageQueryDTO userOrderPageQueryDTO){
-
+        // 用户只能查询自己的工单
+        Long id = BaseContext.getCurrentId();
+        userOrderPageQueryDTO.setUserId(id);
         PageHelper.startPage(userOrderPageQueryDTO.getPage(), userOrderPageQueryDTO.getPageSize());
         Page<OrderRepair> page = orderRepairMapper.pageQueryByUserId(userOrderPageQueryDTO);
-
         long total = page.getTotal();
         List<OrderRepair> result = page.getResult();
         List<OrderRepairVO> pageInfo = new ArrayList<>(result.size());
@@ -192,7 +193,6 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         // 前端会传来id，但是这是对应storage的id
         materialReq.setId(null);
         materialReq.setMaterialId(material.getId());
-        materialReq.setStatus(0);
         LocalDateTime time = LocalDateTime.now();
         materialReq.setCreateTime(time);
         materialReq.setUpdateTime(time);

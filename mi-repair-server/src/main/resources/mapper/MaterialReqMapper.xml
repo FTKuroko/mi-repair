@@ -29,8 +29,8 @@
     <select id="pageQuery" parameterType="com.mi.repair.dto.MaterialReqPageQueryDTO" resultType="com.mi.repair.entity.MaterialReq">
         select * from material_req
         <where>
-            <if test="id != null and id != ''">
-                and id = #{id}
+            <if test="workerId != null and workerId != ''">
+                and worker_id = #{workerId}
             </if>
             <if test="status != null and status != ''">
                 and status = #{status}

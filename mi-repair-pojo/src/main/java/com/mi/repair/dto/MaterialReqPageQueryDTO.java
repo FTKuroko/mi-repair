@@ -6,12 +6,11 @@ import lombok.Data;
  */
 @Data
 public class MaterialReqPageQueryDTO {
-    private Long id;
+    private Long workerId;
 
     private String materialName;
 
     private Integer status;
-    private String statusInfo;
 
     private Integer page;
 
