@@ -55,7 +55,10 @@
                 and user_id = #{userId}
             </if>
             <if test="id != null and id != ''">
-            and id = #{id}
+                and id = #{id}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
             </if>
         </where>
         order by create_time desc
@@ -98,11 +101,14 @@
             <if test="id != null and id != ''">
                 and id = #{id}
             </if>
-            <if test="status != null and status != ''">
+            <if test="status != null and status != '' and status == '0'">
                 and status = #{status} and worker_id = #{workerId}
             </if>
+            <if test="status != null and status != '' and status == '25'">
+                and status = 0
+            </if>
             <if test="status == null or status == ''">
-                and status = 0 or worker_id = #{workerId}
+                and (status = 0 or worker_id = #{workerId})
             </if>
         </where>
         order by create_time desc
