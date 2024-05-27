@@ -5,7 +5,7 @@ mi_repair:
     port: 3306
     database: repairsys
     username: root
-    password: 123456
+    password: Dyc19980925
 file:
 #  upload: "uploads\\"
   upload: "D:\\code\\mi_repair\\uploads\\"

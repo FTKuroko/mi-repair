@@ -4,9 +4,8 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradePagePayRequest;
-
-import com.mi_repair.config.AlipayConfig;
-import com.mi_repair.entity.AliPayPojo;
+import com.mi.repair.config.AlipayConfig;
+import com.mi.repair.entity.AliPayPojo;
 
 /**
  * 沙箱支付工具类
