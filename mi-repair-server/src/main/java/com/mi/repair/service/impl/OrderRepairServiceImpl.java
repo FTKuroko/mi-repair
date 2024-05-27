@@ -5,7 +5,9 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.mi.repair.context.BaseContext;
 import com.mi.repair.dto.*;
+import com.mi.repair.entity.StateMachineRepairOrder;
 import com.mi.repair.enums.MaterialReqStatus;
+import com.mi.repair.enums.RepairOrderEvent;
 import com.mi.repair.enums.RepairOrderStatus;
 import com.mi.repair.enums.StorageType;
 import com.mi.repair.mapper.OrderRepairMapper;
@@ -23,8 +25,11 @@ import com.mi.repair.vo.RepairMaterialsVO;
 import com.mi.repair.webSocket.WebSocketServer;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.persist.StateMachinePersister;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,39 +43,54 @@ import java.util.Map;
  */
 @Service
 public class OrderRepairServiceImpl implements OrderRepairService {
-    @Autowired
-    private OrderRepairMapper orderRepairMapper;
-    @Autowired
-    private StorageMapper storageMapper;
-    @Autowired
-    private MaterialReqMapper matrialReqMapper;
-    @Autowired
-    private WebSocketServer webSocketServer;
+        @Autowired
+        private OrderRepairMapper orderRepairMapper;
+        @Autowired
+        private StorageMapper storageMapper;
+        @Autowired
+        private MaterialReqMapper matrialReqMapper;
+        @Autowired
+        private WebSocketServer webSocketServer;
+        @Resource(name="repairOrderRedisPersister")
+        private StateMachinePersister<RepairOrderStatus, RepairOrderEvent, String> repairOrderRedisPersister;
+        @Resource
+        private StateMachine<RepairOrderStatus, RepairOrderEvent> repairOrderStateMachine;
 
-    @Override
-    public OrderRepairSubmitVO submitOrderRepair(OrderRepairSubmitDTO orderRepairSubmitDTO) {
-        Long id = BaseContext.getCurrentId();
-        // 2、对象转换
-        OrderRepair orderRepair = new OrderRepair();
-        BeanUtils.copyProperties(orderRepairSubmitDTO, orderRepair);
-        // 3、剩余字段信息填充
-        orderRepair.setUserId(id);
-        orderRepair.setStatus(0);
-        LocalDateTime time = LocalDateTime.now();
-        orderRepair.setCreateTime(time);
-        orderRepair.setUpdateTime(time);
-        // 4、插入数据
-        orderRepairMapper.submit(orderRepair);
-        OrderRepairSubmitVO submitVO = OrderRepairSubmitVO.builder().id(orderRepair.getId()).orderTime(time).build();
-        // 5、下单成功，向工程师端发起来单提醒   TODO: 待前后端联调
-        Map map = new HashMap();
-        map.put("type", 1);
-        map.put("orderId", orderRepair.getId());
-        map.put("content", "订单号:" + orderRepair.getId());
-        webSocketServer.sendToAllClient(JSON.toJSONString(map));
+        @Override
+        public OrderRepairSubmitVO submitOrderRepair(OrderRepairSubmitDTO orderRepairSubmitDTO) {
+            Long id = BaseContext.getCurrentId();
+            // 2、对象转换
+            OrderRepair orderRepair = new OrderRepair();
+            BeanUtils.copyProperties(orderRepairSubmitDTO, orderRepair);
+            // 3、剩余字段信息填充
+            orderRepair.setUserId(id);
+            orderRepair.setStatus(0);
+            LocalDateTime time = LocalDateTime.now();
+            orderRepair.setCreateTime(time);
+            orderRepair.setUpdateTime(time);
+            // 4、插入数据
+            orderRepairMapper.submit(orderRepair);
+            OrderRepairSubmitVO submitVO = OrderRepairSubmitVO.builder().id(orderRepair.getId()).orderTime(time).build();
 
-        return submitVO;
-    }
+            //状态机持久化
+            StateMachineRepairOrder stateMachineRepairOrder = new StateMachineRepairOrder();
+            stateMachineRepairOrder.setId(orderRepair.getId());
+            stateMachineRepairOrder.setRepairOrderStatus(RepairOrderStatus.WAITING_FOR_WORKER_ACCEPTANCE);
+            try {
+                repairOrderRedisPersister.persist(repairOrderStateMachine,String.valueOf(orderRepair.getId()));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            // 5、下单成功，向工程师端发起来单提醒   TODO: 待前后端联调
+            Map map = new HashMap();
+            map.put("type", 1);
+            map.put("orderId", orderRepair.getId());
+            map.put("content", "订单号:" + orderRepair.getId());
+            webSocketServer.sendToAllClient(JSON.toJSONString(map));
+
+            return submitVO;
+        }
 
     @Override
     public int confirm(Long orderId){

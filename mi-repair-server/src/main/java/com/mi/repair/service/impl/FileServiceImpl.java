@@ -36,7 +36,6 @@ public class FileServiceImpl implements FileService {
     @Value("${file.upload}")
     private  String UPLOAD_DIR;
 
-
     @Autowired
     private FileMapper fileMapper;
 
