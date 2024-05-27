@@ -2,6 +2,8 @@ package com.mi.repair.dto;
 
 import lombok.Data;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**

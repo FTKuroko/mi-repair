@@ -12,6 +12,7 @@
             <if test="materialId != null">material_id,</if>
             <if test="materialName != null and materialName != ''">material_name,</if>
             <if test="materialAmount != null and materialAmount != ''">material_amount,</if>
+            <if test="priceSum != null and priceSum != ''">price_sum,</if>
             status, create_time, update_time
         )values (
             <if test="id != null">#{id},</if>
@@ -21,7 +22,22 @@
             <if test="materialId != null">#{materialId},</if>
             <if test="materialName != null">#{materialName},</if>
             <if test="materialAmount != null">#{materialAmount},</if>
+            <if test="priceSum != null">#{priceSum},</if>
             #{status}, #{createTime}, #{updateTime}
         )
     </insert>
+    <select id="pageQuery" parameterType="com.mi.repair.dto.MaterialReqPageQueryDTO" resultType="com.mi.repair.entity.MaterialReq">
+        select * from material_req
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="materialName != null and materialName != ''">
+                and material_name = #{materialName}
+            </if>
+        </where>
+    </select>
 </mapper>

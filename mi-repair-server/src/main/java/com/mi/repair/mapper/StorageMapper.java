@@ -1,16 +1,14 @@
 package com.mi.repair.mapper;
 
-import com.mi.repair.Req.Request;
+import com.github.pagehelper.Page;
 import com.mi.repair.dto.StorageDTO;
+import com.mi.repair.dto.WorkerStoragePageQueryDTO;
 import com.mi.repair.entity.Storage;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
-
-
 @Mapper
 public interface StorageMapper {
-    List<Storage> getStorageList(Request request);
+    Page<Storage> getStorageList(WorkerStoragePageQueryDTO queryDTO);
 
     void addStorage(StorageDTO dto);
 
@@ -20,5 +18,5 @@ public interface StorageMapper {
 
     Storage getStorageByName(String name);
 
-    Storage getStorage(Storage storage);
+    Storage getStorage(Long id);
 }

@@ -23,16 +23,16 @@
     </delete>
 
 
-    <select id="getStorageList" parameterType="com.mi.repair.Req.Request" resultType="com.mi.repair.entity.Storage">
+    <select id="getStorageList" parameterType="com.mi.repair.dto.WorkerStoragePageQueryDTO" resultType="com.mi.repair.entity.Storage">
         SELECT * FROM storage
         <where>
-            <if test="id != null">
+            <if test="id != null and id != ''">
                 AND id = #{id}
             </if>
-            <if test="name != null">
-                AND name like #{name}
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
             </if>
-            <if test="type != null">
+            <if test="type != null and type != ''">
                 AND type = #{type}
             </if>
         </where>
@@ -48,8 +48,7 @@
     <select id="getStorage" resultType="com.mi.repair.entity.Storage">
         select * from storage
         <where>
-            <if test="name != null and name != ''">and name like #{name}</if>
-            <if test="type != null and type != ''">and type = #{type}</if>
+            <if test="id != null and id != ''">and id like #{id}</if>
         </where>
     </select>
 </mapper>
