@@ -2,6 +2,7 @@ package com.mi.repair.controller.pay;
 
 import com.mi.repair.utils.PayUtil;
 import com.mi.repair.entity.AliPayPojo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,9 @@ import java.util.UUID;
 @RequestMapping("/aliPay")
 public class AliPayController {
 
+    @Autowired
+    private PayUtil payUtil;
+
     @GetMapping("payTest")
     public void pay(HttpServletResponse httpServletResponse) throws IOException {
         AliPayPojo aliPayPojo = new AliPayPojo();
@@ -23,7 +27,7 @@ public class AliPayController {
         aliPayPojo.setWIDtotal_amount("299");
         aliPayPojo.setWIDbody(null);
 
-        String result = PayUtil.aliPay(aliPayPojo);
+        String result = payUtil.aliPay(aliPayPojo);
 
         httpServletResponse.setContentType("text/html;charset=" + PayUtil.CHARSET);
         httpServletResponse.getWriter().write(result);

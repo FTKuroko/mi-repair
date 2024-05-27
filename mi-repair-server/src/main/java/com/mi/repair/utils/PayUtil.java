@@ -6,31 +6,40 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.mi.repair.config.AlipayConfig;
 import com.mi.repair.entity.AliPayPojo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * 沙箱支付工具类
  */
+@Component
 public class PayUtil {
-
     public static final String FORMAT =  "JSON";
     public static final String CHARSET =  "UTF-8";
     public static final String SIGN_TYPE =  "RSA2";
 
-    public static String aliPay(AliPayPojo aliPayPojo) {
+    private static AlipayConfig alipayConfig;
+    @Autowired
+    public void setAlipayConfig(AlipayConfig alipayConfig) {
+        this.alipayConfig = alipayConfig;
+    }
+
+
+    public String aliPay(AliPayPojo aliPayPojo) {
         //获得初始化的AlipayClient
         /** 获得初始化的AlipayClient **/
-        AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.gatewayUrl,
-                AlipayConfig.appId,
-                AlipayConfig.appPrivateKey,
+        AlipayClient alipayClient = new DefaultAlipayClient(alipayConfig.gatewayUrl,
+                alipayConfig.appId,
+                alipayConfig.appPrivateKey,
                 FORMAT,
                 CHARSET,
-                AlipayConfig.aliPayPublicKey,
+                alipayConfig.aliPayPublicKey,
                 SIGN_TYPE);
 
         //设置请求参数
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
-        alipayRequest.setReturnUrl(AlipayConfig.returnUrl);
-        alipayRequest.setNotifyUrl(AlipayConfig.notifyUrl);
+        alipayRequest.setReturnUrl(alipayConfig.returnUrl);
+        alipayRequest.setNotifyUrl(alipayConfig.notifyUrl);
 
         //商户订单号，商户网站订单系统中唯一订单号，必填
         String out_trade_no = aliPayPojo.getWIDout_trade_no();
