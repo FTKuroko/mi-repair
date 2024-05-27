@@ -43,6 +43,4 @@ public class OrderRepair implements Serializable {
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
-
-    private RepairOrderStatus repairOrderStatus;
 }
