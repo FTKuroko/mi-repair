@@ -6,18 +6,11 @@ import com.mi.repair.enums.RepairOrderStatus;
 import com.mi.repair.statemachine.RepairOrderProcessor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.annotation.OnTransition;
 
 import javax.annotation.Resource;
 
 @SpringBootTest
 public class StateMachineTest {
-
-    @Resource
-    StateMachine<RepairOrderStatus, RepairOrderEvent> repairOrderStateMachine;
 
     @Resource
     RepairOrderProcessor repairOrderProcessor;
@@ -50,6 +43,13 @@ public class StateMachineTest {
         orderRepair.setRepairOrderStatus(RepairOrderStatus.PAYED);
         repairOrderProcessor.process(orderRepair, RepairOrderEvent.DEVICE_RETURN);
     }
+
+//    @Test
+//    public void testRestore() throws Exception {
+////        String id = "88888888";
+//        orderRedisPersister.restore(repairOrderStateMachine, "88888888");
+//        System.out.println("恢复状态机后的状态为：" + repairOrderStateMachine.getState().getId());
+//    }
 
     @Test
     public void workerAcceptOrder() {

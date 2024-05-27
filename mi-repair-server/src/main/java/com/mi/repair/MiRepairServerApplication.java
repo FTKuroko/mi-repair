@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @Slf4j
 public class MiRepairServerApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(MiRepairServerApplication.class, args);
         log.info("启动...");

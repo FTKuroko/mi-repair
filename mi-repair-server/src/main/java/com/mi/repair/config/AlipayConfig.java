@@ -1,4 +1,4 @@
-package com.mi_repair.config;
+package com.mi.repair.config;
 
 /**
  *

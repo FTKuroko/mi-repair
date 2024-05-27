@@ -1,4 +1,4 @@
-package com.mi_repair.entity;
+package com.mi.repair.entity;
 
 
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.mi_repair.config;
+package com.mi.repair.config;
 
 
 import com.mi.repair.enums.RepairOrderEvent;
@@ -12,8 +12,8 @@ import org.springframework.statemachine.config.builders.StateMachineStateConfigu
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 import java.util.EnumSet;
 
-@EnableStateMachine
 @Configuration
+@EnableStateMachine
 @Slf4j
 public class RepairOrderStateMachineConfig extends EnumStateMachineConfigurerAdapter<RepairOrderStatus, RepairOrderEvent> {
     @Override

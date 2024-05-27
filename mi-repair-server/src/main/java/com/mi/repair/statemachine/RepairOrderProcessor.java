@@ -5,6 +5,7 @@ import com.mi.repair.enums.RepairOrderEvent;
 import com.mi.repair.enums.RepairOrderStatus;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
@@ -26,16 +27,13 @@ public class RepairOrderProcessor {
     public boolean process(OrderRepair repairOrder, RepairOrderEvent repairOrderEvent) {
         Message<RepairOrderEvent> message = MessageBuilder.withPayload(repairOrderEvent).setHeader("repairOrder",repairOrder).build();
         boolean flag = sendEvent(message);
-
         return flag;
     }
 
     @SneakyThrows
     private boolean sendEvent(Message<RepairOrderEvent> message) {
         OrderRepair repairOrder = (OrderRepair) message.getHeaders().get("repairOrder");
-        //repairOrderStateMachine.start();
         boolean result = repairOrderStateMachine.sendEvent(message);
         return result;
     }
-
 }
