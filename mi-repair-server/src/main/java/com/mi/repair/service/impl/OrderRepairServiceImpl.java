@@ -125,7 +125,8 @@ public class OrderRepairServiceImpl implements OrderRepairService {
     @Override
     public int workerConfirm(Long orderId){
         int code = RepairOrderStatus.WAITING_FOR_USER_CONFIRMATION.getCode();
-        return orderRepairMapper.updateStatus(orderId, code);
+        Long workerId = BaseContext.getCurrentId();
+        return orderRepairMapper.updateStatus(orderId, code,workerId);
     }
 
     @Override

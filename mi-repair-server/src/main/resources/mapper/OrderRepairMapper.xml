@@ -81,7 +81,7 @@
     </update>
 
     <update id="updateStatus" parameterType="com.mi.repair.entity.OrderRepair">
-        update repair_order set status = #{code}
+        update repair_order set status = #{code} ,worker_id = #{workerId}
         <where>
             id = #{orderId}
         </where>

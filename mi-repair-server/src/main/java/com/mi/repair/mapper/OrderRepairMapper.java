@@ -55,7 +55,7 @@ public interface OrderRepairMapper {
      * @param code
      * @return
      */
-    int updateStatus(Long orderId, int code);
+    int updateStatus(Long orderId, int code,Long workerId);
 
     /**
      * 工程师分页查询维修单
