@@ -26,7 +26,7 @@ public class StateMachineTest {
         repairOrderProcessor.process(orderRepair, RepairOrderEvent.USER_CONFIRM_ORDER);
         System.out.println("------------等待工程师检测------------------");
         orderRepair.setRepairOrderStatus(RepairOrderStatus.CONFIRMED);
-        repairOrderProcessor.process(orderRepair, RepairOrderEvent.WORKER_INSPECTION_SUCCESS);
+        repairOrderProcessor.process(orderRepair, RepairOrderEvent.UPLOAD_PICTURES);
         System.out.println("-----------申请材料----------------------");
         orderRepair.setRepairOrderStatus(RepairOrderStatus.APPLICATION_MATERIALS);
         repairOrderProcessor.process(orderRepair, RepairOrderEvent.APPLICATION_MATERIALS_SUCCESS);
