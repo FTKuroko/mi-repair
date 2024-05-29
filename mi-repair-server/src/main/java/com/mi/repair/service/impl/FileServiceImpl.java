@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,11 +124,11 @@ public class FileServiceImpl implements FileService {
      * @param files
      */
     @Override
-    public String batchUpload(MultipartFile[] files) {
+    public String batchUpload(MultipartFile[] files, Long orderId) {
         StringBuilder sb = new StringBuilder();
         try{
             for(MultipartFile file : files){
-                upload(file);
+                upload(file, orderId);
             }
         }catch (Exception e){
             log.error("文件上传异常:" + e.getMessage());
@@ -140,7 +141,7 @@ public class FileServiceImpl implements FileService {
      * @param file
      * @return
      */
-    public String upload(MultipartFile file){
+    public String upload(MultipartFile file, Long orderId){
         try {
             // 判断桶是否存在
             boolean bucketExists = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket_files).build());
@@ -166,7 +167,14 @@ public class FileServiceImpl implements FileService {
             String url = minioConfig.getEndpoint() + "/" + bucket_files + "/" + originalFilename;
             log.info("文件上传成功:{}， url:{}", originalFilename, url);
             // TODO: 将文件上传路径以及绑定的维修单 id 上传到数据库文件表中
-
+            File f = new File();
+            LocalDateTime now = LocalDateTime.now();
+            f.setType(1);
+            f.setPath(url);
+            f.setCreateTime(now);
+            f.setUpdateTime(now);
+            f.setOrderId(orderId);
+            fileMapper.saveFile(f);
         }catch (Exception e){
             log.error("文件上传异常:" + e.getMessage());
         }

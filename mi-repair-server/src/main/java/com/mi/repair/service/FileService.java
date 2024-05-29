@@ -21,7 +21,7 @@ public interface FileService {
      */
     List<byte[]> getFile(FileDTO dto, HttpServletResponse response) throws IOException;
 
-    String batchUpload(MultipartFile[] files);
+    String batchUpload(MultipartFile[] files, Long orderId);
 
-    String upload(MultipartFile file);
+    String upload(MultipartFile file, Long orderId);
 }

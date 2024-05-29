@@ -24,4 +24,6 @@ public interface FileMapper {
      * @return
      */
     List<File> getFiles(FileDTO dto);
+
+    void saveFile(File file);
 }

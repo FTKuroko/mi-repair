@@ -53,9 +53,10 @@ public class FileController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/batchUpload")
-    public Result<String> batchUpload(@RequestParam(name = "files") MultipartFile[] files) throws Exception{
-        fileService.batchUpload(files);
+    @PostMapping("/{orderId}/batchUpload")
+    public Result<String> batchUpload(@PathVariable Long orderId,
+                                      @RequestParam(name = "files") MultipartFile[] files) throws Exception{
+        fileService.batchUpload(files, orderId);
         return Result.success("文件上传成功");
     }
 
@@ -65,8 +66,8 @@ public class FileController {
      * @return
      */
     @PostMapping("/uploadImage")
-    public Result<String> upload(@RequestParam(name = "file") MultipartFile file){
-        fileService.upload(file);
+    public Result<String> upload(@RequestParam(name = "file") MultipartFile file, Long orderId){
+        fileService.upload(file, orderId);
         return Result.success("文件上传成功");
     }
 

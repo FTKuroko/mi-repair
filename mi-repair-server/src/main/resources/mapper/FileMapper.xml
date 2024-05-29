@@ -15,4 +15,8 @@
         AND type = #{type}
     </select>
 
+    <insert id="saveFile" parameterType="File" useGeneratedKeys="true" keyProperty="id">
+        insert into file(type, order_id, path, create_time, update_time)
+        values (#{type}, #{orderId}, #{path}, #{createTime}, #{updateTime})
+    </insert>
 </mapper>
