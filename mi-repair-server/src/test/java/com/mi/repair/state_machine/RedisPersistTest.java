@@ -40,7 +40,7 @@ public class RedisPersistTest {
 
     @Test
     public void testRestore() throws Exception {
-        Long id = 13L;
+        Long id = 15L;
         StateMachine<RepairOrderStatus, RepairOrderEvent> restore = orderRedisPersister.restore(repairOrderStateMachine, String.valueOf(id));
         System.out.println("恢复状态机后的状态为：" + restore.getState().getId());
     }
