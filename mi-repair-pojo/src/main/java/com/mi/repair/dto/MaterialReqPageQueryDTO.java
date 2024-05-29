@@ -11,7 +11,6 @@ public class MaterialReqPageQueryDTO {
     private String materialName;
 
     private Integer status;
-    private String statusInfo;
 
     private Integer page;
 

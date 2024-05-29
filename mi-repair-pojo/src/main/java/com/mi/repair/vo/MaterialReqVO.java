@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -22,5 +23,5 @@ public class MaterialReqVO {
     private Integer materialAmount;
     private Integer status;
     private String statusInfo;
-    private Double priceSum;//总价格
+    private BigDecimal priceSum;//总价格
 }
