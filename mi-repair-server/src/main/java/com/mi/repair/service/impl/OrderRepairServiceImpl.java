@@ -25,6 +25,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -193,6 +194,9 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         materialReq.setId(null);
         materialReq.setMaterialId(material.getId());
         materialReq.setStatus(0);
+        // 材料价格
+        BigDecimal priceSum = material.getPrice().multiply(BigDecimal.valueOf(materialReq.getMaterialAmount()));
+        materialReq.setPriceSum(priceSum);
         LocalDateTime time = LocalDateTime.now();
         materialReq.setCreateTime(time);
         materialReq.setUpdateTime(time);

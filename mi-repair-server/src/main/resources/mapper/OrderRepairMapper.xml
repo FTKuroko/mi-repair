@@ -24,7 +24,7 @@
             <if test="userAddr != null and userAddr != ''">user_addr,</if>
             <if test="goodsInfo != null and goodsInfo != ''">goods_info,</if>
             <if test="sn != null and sn != ''">sn,</if>
-            <if test="desc != null and desc != ''">description,</if>
+            <if test="description != null and description != ''">description,</if>
             status,
             create_time,
             update_time
@@ -36,7 +36,7 @@
             <if test="userAddr != null and userAddr != ''">#{userAddr},</if>
             <if test="goodsInfo != null and goodsInfo != ''">#{goodsInfo},</if>
             <if test="sn != null and sn != ''">#{sn},</if>
-            <if test="desc != null and desc != ''">#{desc},</if>
+            <if test="description != null and description != ''">#{description},</if>
             #{status},#{createTime},#{updateTime}
         )
     </insert>

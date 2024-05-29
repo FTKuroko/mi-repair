@@ -34,6 +34,6 @@ public class OrderRepairSubmitDTO {
     private String sn;
 
     @ApiModelProperty("设备信息")
-    private String desc;
+    private String description;
 
 }
