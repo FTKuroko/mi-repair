@@ -12,4 +12,5 @@ import java.util.List;
 @Mapper
 public interface ScheduleMapper {
     List<Schedule> getScheduleByOrderId(ScheduleDTO scheduleDTO);
+    int insertSchedule(Schedule schedule);
 }
