@@ -1,9 +1,11 @@
 package com.mi.repair.controller.worker;
 
+import com.mi.repair.enums.RepairOrderEvent;
 import com.mi.repair.result.PageResult;
 import com.mi.repair.service.OrderRepairService;
 import com.mi.repair.dto.WorkerOrderPageQueryDTO;
 import com.mi.repair.result.Result;
+import com.mi.repair.utils.StateMachineUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +22,14 @@ import org.springframework.web.bind.annotation.*;
 public class WorkOrderRepairController {
     @Autowired
     OrderRepairService orderRepairService;
+    @Autowired
+    private StateMachineUtil stateMachineUtil;
     @PutMapping("/confirm")
     @ApiOperation("工程师接单")
     public Result<String> cofirm(@RequestParam("id") Long id){
         log.info("工程师接单:{}", id);
+        // 向状态机发送 工程师接单事件
+        stateMachineUtil.saveAndSendEvent(id,RepairOrderEvent.WORKER_ACCEPT_ORDER);
         // 1、 修改订单状态
         int i = orderRepairService.workerConfirm(id);
         // TODO：2、 向用户发起通知
