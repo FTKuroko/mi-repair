@@ -1,10 +1,8 @@
 package com.mi.repair.statemachine;
 
 
-import com.mi.repair.entity.OrderRepair;
 import com.mi.repair.entity.StateMachineRepairOrder;
 import com.mi.repair.enums.RepairOrderEvent;
-import com.mi.repair.enums.RepairOrderStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
 import org.springframework.statemachine.annotation.OnTransition;
@@ -26,7 +24,6 @@ public class RepairOrderStateListener {
     public boolean workerAcceptOrder(Message<RepairOrderEvent> message) {
         StateMachineRepairOrder stateMachineRepairOrder = (StateMachineRepairOrder) (message.getHeaders().get("repairOrder"));
         log.info("状态机监听:{ 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
-
         return true;
     }
 
