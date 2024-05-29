@@ -42,7 +42,7 @@
     </insert>
 
     <update id="confirm" parameterType="com.mi.repair.entity.OrderRepair">
-        update repair_order set status = 3
+        update repair_order set status = 2
         <where>
             id = #{orderId}
         </where>
@@ -74,7 +74,7 @@
     </select>
 
     <update id="delete" parameterType="com.mi.repair.entity.OrderRepair">
-        update repair_order set status = 4
+        update repair_order set status = 3
         <where>
             id = #{orderId}
         </where>

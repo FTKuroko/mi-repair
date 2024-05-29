@@ -38,7 +38,7 @@ public class userOrderRepairTest {
         dto.setUserPhone("xxxxxxxx");
         dto.setGoodsInfo("小米14");
         dto.setSn("xxxxxxxxx");
-        dto.setDesc("手机电池有问题，需要频繁充电");
+        dto.setDescription("手机电池有问题，需要频繁充电");
         OrderRepairSubmitVO submitVO = orderRepairService.submitOrderRepair(dto);
         System.out.println(submitVO);
     }

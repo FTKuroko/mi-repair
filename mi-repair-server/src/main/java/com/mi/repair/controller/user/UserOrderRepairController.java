@@ -2,9 +2,11 @@ package com.mi.repair.controller.user;
 
 import com.mi.repair.dto.OrderRepairSubmitDTO;
 import com.mi.repair.dto.UserOrderPageQueryDTO;
+import com.mi.repair.enums.RepairOrderEvent;
 import com.mi.repair.result.PageResult;
 import com.mi.repair.service.OrderRepairService;
 import com.mi.repair.result.Result;
+import com.mi.repair.utils.StateMachineUtil;
 import com.mi.repair.vo.OrderRepairSubmitVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,6 +27,8 @@ public class UserOrderRepairController {
 
     @Autowired
     private OrderRepairService orderRepairService;
+    @Autowired
+    private StateMachineUtil stateMachineUtil;
 
     @PostMapping("/submit")
     @ApiOperation("用户下单")
@@ -38,6 +42,7 @@ public class UserOrderRepairController {
     @ApiOperation("用户维修单确认")
     public Result<String> confirm(@RequestParam("orderId") Long orderId){
         log.info("用户确认维修单信息:维修单id{}", orderId);
+        stateMachineUtil.saveAndSendEvent(orderId, RepairOrderEvent.USER_CONFIRM_ORDER);
         return orderRepairService.confirm(orderId) > 0 ? Result.success("用户已确认") :
                 Result.error("用户确认失败");
     }
@@ -54,6 +59,7 @@ public class UserOrderRepairController {
     @ApiOperation("用户取消维修单")
     public Result<String> delete(@RequestParam("orderId") Long orderId){
         log.info("用户取消维修单:{]", orderId);
+        stateMachineUtil.saveAndSendEvent(orderId,RepairOrderEvent.USER_CANCEL_ORDER);
         return orderRepairService.delete(orderId) > 0 ? Result.success("用户已取消维修单") :
                 Result.error("用户取消维修单失败");
     }
