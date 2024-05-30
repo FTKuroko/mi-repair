@@ -40,7 +40,7 @@ public class RedisPersistTest {
 
     @Test
     public void testRestore() throws Exception {// 根据订单id查询状态机状态
-        Long id = 101L;
+        Long id = 111L;
         StateMachine<RepairOrderStatus, RepairOrderEvent> restore = orderRedisPersister.restore(repairOrderStateMachine, String.valueOf(id));
         System.out.println("恢复状态机后的状态为：" + restore.getState().getId());
     }
@@ -77,7 +77,7 @@ public class RedisPersistTest {
 //    }
 
     @Test
-    public void sendRepairStatus() throws Exception {//状态机订单状态设置为维修状态
+    public void setRepairStatus() throws Exception {//状态机订单状态设置为维修状态
         Long id = 100L;
         StateMachineRepairOrder orderRepair = new StateMachineRepairOrder();
         orderRepair.setRepairOrderStatus(RepairOrderStatus.WAITING_FOR_WORKER_ACCEPTANCE);
@@ -92,6 +92,33 @@ public class RedisPersistTest {
         orderRepair.setRepairOrderStatus(RepairOrderStatus.APPLICATION_MATERIALS);
         repairOrderProcessor.process(orderRepair, RepairOrderEvent.APPLICATION_MATERIALS_SUCCESS);
         orderRepair.setId(id);
+        orderRedisPersister.persist(repairOrderStateMachine, String.valueOf(id));
+
+    }
+
+    @Test
+    public void setPayedStatus() throws Exception {//状态机订单状态设置为已支付状态
+        Long id = 111L;
+        StateMachineRepairOrder orderRepair = new StateMachineRepairOrder();
+        orderRepair.setRepairOrderStatus(RepairOrderStatus.WAITING_FOR_WORKER_ACCEPTANCE);
+        repairOrderProcessor.process(orderRepair, RepairOrderEvent.WORKER_ACCEPT_ORDER);
+        System.out.println("------------等待用户确认------------------");
+        orderRepair.setRepairOrderStatus(RepairOrderStatus.WAITING_FOR_USER_CONFIRMATION);
+        repairOrderProcessor.process(orderRepair, RepairOrderEvent.USER_CONFIRM_ORDER);
+        System.out.println("------------等待工程师检测------------------");
+        orderRepair.setRepairOrderStatus(RepairOrderStatus.CONFIRMED);
+        repairOrderProcessor.process(orderRepair, RepairOrderEvent.UPLOAD_PICTURES);
+        System.out.println("-----------申请材料----------------------");
+        orderRepair.setRepairOrderStatus(RepairOrderStatus.APPLICATION_MATERIALS);
+        repairOrderProcessor.process(orderRepair, RepairOrderEvent.APPLICATION_MATERIALS_SUCCESS);
+        orderRepair.setRepairOrderStatus(RepairOrderStatus.REPAIR);
+        repairOrderProcessor.process(orderRepair,RepairOrderEvent.REPAIR_SUCCESS);
+        orderRepair.setRepairOrderStatus(RepairOrderStatus.RETEST);
+        repairOrderProcessor.process(orderRepair,RepairOrderEvent.RETEST_SUCCESS);
+        orderRepair.setRepairOrderStatus(RepairOrderStatus.WAITING_PAY);
+        repairOrderProcessor.process(orderRepair,RepairOrderEvent.USER_PAY);
+        orderRepair.setId(id);
+
         orderRedisPersister.persist(repairOrderStateMachine, String.valueOf(id));
 
     }

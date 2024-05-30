@@ -19,6 +19,7 @@ public class StateMachineTest {
     public void test() {
         System.out.println("------------等待工程师接单------------------");
         StateMachineRepairOrder orderRepair = new StateMachineRepairOrder();
+        orderRepair.setId(100000000L);
         orderRepair.setRepairOrderStatus(RepairOrderStatus.WAITING_FOR_WORKER_ACCEPTANCE);
         repairOrderProcessor.process(orderRepair, RepairOrderEvent.WORKER_ACCEPT_ORDER);
         System.out.println("------------等待用户确认------------------");

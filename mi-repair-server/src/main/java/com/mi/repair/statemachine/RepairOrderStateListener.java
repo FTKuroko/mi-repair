@@ -30,7 +30,7 @@ public class RepairOrderStateListener {
     @OnTransition(source = "WAITING_FOR_WORKER_ACCEPTANCE",target = "WAITING_FOR_USER_CONFIRMATION")
     public boolean workerAcceptOrder(Message<RepairOrderEvent> message) {
         StateMachineRepairOrder stateMachineRepairOrder = (StateMachineRepairOrder) (message.getHeaders().get("repairOrder"));
-        log.info("状态机监听:{ 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
+        log.info("状态机监听:{ 维修订单id : " + stateMachineRepairOrder.getId() + " | 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
 
 //        orderRepairMapper.updateStatusById(stateMachineRepairOrder.getId(), RepairOrderStatus.WAITING_FOR_USER_CONFIRMATION.getCode());
 
@@ -40,8 +40,7 @@ public class RepairOrderStateListener {
     @OnTransition(source = "WAITING_FOR_WORKER_ACCEPTANCE",target = "CANCEL")
     public boolean userCancelOrderByWaitingWorker(Message<RepairOrderEvent> message) {
         StateMachineRepairOrder stateMachineRepairOrder = (StateMachineRepairOrder) (message.getHeaders().get("repairOrder"));
-        log.info("状态机监听:{ 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
-
+        log.info("状态机监听:{ 维修订单id : " + stateMachineRepairOrder.getId() + " | 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
 //        orderRepairMapper.updateStatusById(stateMachineRepairOrder.getId(), RepairOrderStatus.CANCEL.getCode());
 
         return true;
@@ -50,8 +49,7 @@ public class RepairOrderStateListener {
     @OnTransition(source = "WAITING_FOR_USER_CONFIRMATION",target = "CONFIRMED")
     public boolean userConfirmOrder(Message<RepairOrderEvent> message) {
         StateMachineRepairOrder stateMachineRepairOrder = (StateMachineRepairOrder) (message.getHeaders().get("repairOrder"));
-        log.info("状态机监听:{ 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
-
+        log.info("状态机监听:{ 维修订单id : " + stateMachineRepairOrder.getId() + " | 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
         //orderRepairMapper.updateStatusById(stateMachineRepairOrder.getId(), RepairOrderStatus.CONFIRMED.getCode());
 
         return true;
@@ -60,8 +58,7 @@ public class RepairOrderStateListener {
     @OnTransition(source = "WAITING_FOR_USER_CONFIRMATION",target = "CANCEL")
     public boolean userCancelOrderByUserConfirmation(Message<RepairOrderEvent> message) {
         StateMachineRepairOrder stateMachineRepairOrder = (StateMachineRepairOrder) (message.getHeaders().get("repairOrder"));
-        log.info("状态机监听:{ 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
-
+        log.info("状态机监听:{ 维修订单id : " + stateMachineRepairOrder.getId() + " | 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
         //orderRepairMapper.updateStatusById(stateMachineRepairOrder.getId(), RepairOrderStatus.CANCEL.getCode());
 
         return true;
@@ -79,8 +76,7 @@ public class RepairOrderStateListener {
     @OnTransition(source = "CONFIRMED",target = "APPLICATION_MATERIALS")
     public boolean workerInspectionSuccess(Message<RepairOrderEvent> message) {
         StateMachineRepairOrder stateMachineRepairOrder = (StateMachineRepairOrder) (message.getHeaders().get("repairOrder"));
-        log.info("状态机监听:{ 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
-
+        log.info("状态机监听:{ 维修订单id : " + stateMachineRepairOrder.getId() + " | 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
         //orderRepairMapper.updateStatusById(stateMachineRepairOrder.getId(), RepairOrderStatus.APPLICATION_MATERIALS.getCode());
 
         return true;
@@ -89,8 +85,7 @@ public class RepairOrderStateListener {
     @OnTransition(source = "APPLICATION_MATERIALS",target = "REPAIR")
     public boolean applicationMaterialsSuccessByApplicationMaterials(Message<RepairOrderEvent> message) {
         StateMachineRepairOrder stateMachineRepairOrder = (StateMachineRepairOrder) (message.getHeaders().get("repairOrder"));
-        log.info("状态机监听:{ 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
-
+        log.info("状态机监听:{ 维修订单id : " + stateMachineRepairOrder.getId() + " | 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
         //orderRepairMapper.updateStatusById(stateMachineRepairOrder.getId(), RepairOrderStatus.REPAIR.getCode());
 
         return true;
@@ -123,8 +118,7 @@ public class RepairOrderStateListener {
     @OnTransition(source = "REPAIR",target = "RETEST")
     public boolean reapairSuccess(Message<RepairOrderEvent> message) {
         StateMachineRepairOrder stateMachineRepairOrder = (StateMachineRepairOrder) (message.getHeaders().get("repairOrder"));
-        log.info("状态机监听:{ 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
-
+        log.info("状态机监听:{ 维修订单id : " + stateMachineRepairOrder.getId() + " | 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
         //orderRepairMapper.updateStatusById(stateMachineRepairOrder.getId(), RepairOrderStatus.RETEST.getCode());
 
         return true;
@@ -133,8 +127,7 @@ public class RepairOrderStateListener {
     @OnTransition(source = "REPAIR",target = "APPLICATION_MATERIALS")
     public boolean repairFailed(Message<RepairOrderEvent> message) {
         StateMachineRepairOrder stateMachineRepairOrder = (StateMachineRepairOrder) (message.getHeaders().get("repairOrder"));
-        log.info("状态机监听:{ 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
-
+        log.info("状态机监听:{ 维修订单id : " + stateMachineRepairOrder.getId() + " | 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
         //orderRepairMapper.updateStatusById(stateMachineRepairOrder.getId(), RepairOrderStatus.APPLICATION_MATERIALS.getCode());
 
         return true;
@@ -143,8 +136,7 @@ public class RepairOrderStateListener {
     @OnTransition(source = "RETEST",target = "WAITING_PAY")
     public boolean RetestSuccess(Message<RepairOrderEvent> message) {
         StateMachineRepairOrder stateMachineRepairOrder = (StateMachineRepairOrder) (message.getHeaders().get("repairOrder"));
-        log.info("状态机监听:{ 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
-
+        log.info("状态机监听:{ 维修订单id : " + stateMachineRepairOrder.getId() + " | 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
         //orderRepairMapper.updateStatusById(stateMachineRepairOrder.getId(), RepairOrderStatus.WAITING_PAY.getCode());
 
         return true;
@@ -169,8 +161,7 @@ public class RepairOrderStateListener {
     @OnTransition(source = "WAITING_PAY",target = "PAYED")
     public boolean userPay(Message<RepairOrderEvent> message) {
         StateMachineRepairOrder stateMachineRepairOrder = (StateMachineRepairOrder) (message.getHeaders().get("repairOrder"));
-        log.info("状态机监听:{ 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
-
+        log.info("状态机监听:{ 维修订单id : " + stateMachineRepairOrder.getId() + " | 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
         //orderRepairMapper.updateStatusById(stateMachineRepairOrder.getId(), RepairOrderStatus.PAYED.getCode());
 
         return true;
@@ -179,8 +170,7 @@ public class RepairOrderStateListener {
     @OnTransition(source = "PAYED",target = "DONE")
     public boolean returnDeviceByPayed(Message<RepairOrderEvent> message) {
         StateMachineRepairOrder stateMachineRepairOrder = (StateMachineRepairOrder) (message.getHeaders().get("repairOrder"));
-        log.info("状态机监听:{ 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
-
+        log.info("状态机监听:{ 维修订单id : " + stateMachineRepairOrder.getId() + " | 订单状态:" + stateMachineRepairOrder.getRepairOrderStatus() + "(" + stateMachineRepairOrder.getRepairOrderStatus().getDescription() +"),执行事件:" + message.getPayload().name() + "(" + message.getPayload().getDescription() +") }");
         //orderRepairMapper.updateStatusById(stateMachineRepairOrder.getId(), RepairOrderStatus.DONE.getCode());
 
         return true;

@@ -78,6 +78,7 @@ public class WorkOrderRepairController {
     public Result<String> returnDevice(@RequestParam("id")Long id) {
         log.info("归还设备:{}", id);
         // 1、 修改订单状态
+        stateMachineUtil.saveAndSendEvent(id,RepairOrderEvent.DEVICE_RETURN);
         int i = orderRepairService.returnDevice(id);
         // TODO：2、 向用户发起通知
 
