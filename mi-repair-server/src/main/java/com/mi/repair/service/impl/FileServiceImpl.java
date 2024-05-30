@@ -166,7 +166,7 @@ public class FileServiceImpl implements FileService {
             // 拼接文件上传地址，存入数据库
             String url = minioConfig.getEndpoint() + "/" + bucket_files + "/" + originalFilename;
             log.info("文件上传成功:{}， url:{}", originalFilename, url);
-            // TODO: 将文件上传路径以及绑定的维修单 id 上传到数据库文件表中
+
             File f = new File();
             LocalDateTime now = LocalDateTime.now();
             f.setType(1);
@@ -179,5 +179,11 @@ public class FileServiceImpl implements FileService {
             log.error("文件上传异常:" + e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public List<File> preview(Long orderId) {
+        List<File> files = fileMapper.preview(orderId);
+        return files;
     }
 }

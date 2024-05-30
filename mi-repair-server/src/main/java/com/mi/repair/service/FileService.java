@@ -1,6 +1,7 @@
 package com.mi.repair.service;
 
 import com.mi.repair.dto.FileDTO;
+import com.mi.repair.entity.File;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -24,4 +25,6 @@ public interface FileService {
     String batchUpload(MultipartFile[] files, Long orderId);
 
     String upload(MultipartFile file, Long orderId);
+
+    List<File> preview(Long orderId);
 }

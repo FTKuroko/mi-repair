@@ -26,4 +26,6 @@ public interface FileMapper {
     List<File> getFiles(FileDTO dto);
 
     void saveFile(File file);
+
+    List<File> preview(Long orderId);
 }
