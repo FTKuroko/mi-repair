@@ -5,10 +5,14 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ZipUtil;
 import com.mi.repair.config.MinioConfig;
 import com.mi.repair.dto.FileDTO;
+import com.mi.repair.enums.RepairOrderEvent;
+import com.mi.repair.enums.RepairOrderStatus;
 import com.mi.repair.mapper.FileMapper;
+import com.mi.repair.mapper.OrderRepairMapper;
 import com.mi.repair.service.FileService;
 import com.mi.repair.entity.File;
 import com.mi.repair.enums.FileStatus;
+import com.mi.repair.utils.StateMachineUtil;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
@@ -36,10 +40,12 @@ public class FileServiceImpl implements FileService {
 
     @Value("${file.upload}")
     private  String UPLOAD_DIR;
-
     @Autowired
     private FileMapper fileMapper;
-
+    @Autowired
+    private OrderRepairMapper orderRepairMapper;
+    @Autowired
+    private StateMachineUtil stateMachineUtil;
     @Autowired
     private MinioConfig minioConfig;
     @Autowired
@@ -130,6 +136,10 @@ public class FileServiceImpl implements FileService {
             for(MultipartFile file : files){
                 upload(file, orderId);
             }
+            //
+            stateMachineUtil.saveAndSendEvent(orderId, RepairOrderEvent.UPLOAD_PICTURES);
+            // 上传成功之后，修改order状态
+            orderRepairMapper.updateStatusById(orderId, RepairOrderStatus.APPLICATION_MATERIALS.getCode());
         }catch (Exception e){
             log.error("文件上传异常:" + e.getMessage());
         }

@@ -125,7 +125,8 @@ public class OrderRepairServiceImpl implements OrderRepairService {
     @Override
     public int workerConfirm(Long orderId){
         int code = RepairOrderStatus.WAITING_FOR_USER_CONFIRMATION.getCode();
-        return orderRepairMapper.updateStatus(orderId, code);
+        Long workerId = BaseContext.getCurrentId();
+        return orderRepairMapper.updateStatus(orderId, code,workerId);
     }
 
     @Override
@@ -163,6 +164,32 @@ public class OrderRepairServiceImpl implements OrderRepairService {
             voList.add(vo);
         }
         return voList;
+    }
+
+    @Override
+    public int orderRepairSuccess(Long orderId) {
+        // 1、 查找维修单信息
+        OrderRepair orderRepair = orderRepairMapper.selectById(orderId);
+        // 2、 获取当前工程师 id
+        Long workerId = BaseContext.getCurrentId();
+        // 3、 判断当前维修单是否属于该工程师以及维修单当前状态是否为维修状态
+        if(workerId.equals(orderRepair.getWorkerId()) && orderRepair.getStatus().equals(RepairOrderStatus.REPAIR.getCode())){
+            return orderRepairMapper.updateStatusById(orderId,RepairOrderStatus.RETEST.getCode());
+        }
+        return 0;
+    }
+
+    @Override
+    public int orderRepairFailed(Long orderId) {
+        // 1、 查找维修单信息
+        OrderRepair orderRepair = orderRepairMapper.selectById(orderId);
+        // 2、 获取当前工程师 id
+        Long workerId = BaseContext.getCurrentId();
+        // 3、 判断当前维修单是否属于该工程师以及维修单当前状态是否为维修状态
+        if(workerId.equals(orderRepair.getWorkerId()) && orderRepair.getStatus().equals(RepairOrderStatus.REPAIR.getCode())){
+            return orderRepairMapper.updateStatusById(orderId,RepairOrderStatus.REPAIR_FAILED.getCode());
+        }
+        return 0;
     }
 
     /**

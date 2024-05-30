@@ -50,12 +50,20 @@ public interface OrderRepairMapper {
     int delete(Long orderId);
 
     /**
-     * 修改订单状态
+     * 工程师确认工单
      * @param orderId
      * @param code
      * @return
      */
-    int updateStatus(Long orderId, int code);
+    int updateStatus(Long orderId, int code,Long workerId);
+
+    /**
+     * 修改工单状态
+     * @param orderId
+     * @param code
+     * @return
+     */
+    int updateStatusById(Long orderId, int code);
 
     /**
      * 工程师分页查询维修单

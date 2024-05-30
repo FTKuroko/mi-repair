@@ -80,21 +80,18 @@
         </where>
     </update>
 
-    <update id="updateStatus" parameterType="com.mi.repair.entity.OrderRepair">
+    <update id="updateStatus">
+        update repair_order set status = #{code} ,worker_id = #{workerId}
+        <where>
+            id = #{orderId}
+        </where>
+    </update>
+    <update id="updateStatusById">
         update repair_order set status = #{code}
         <where>
             id = #{orderId}
         </where>
     </update>
-
-<!--    <select id="pageQueryByWorker" resultType="com.mi.repair.entity.OrderRepair">-->
-<!--        select * from repair_order-->
-<!--        <where>-->
-<!--            <if test="id != null and id != ''">and id = #{orderId}</if>-->
-<!--            <if test="startTime != null and startTime != ''">and createTime = #{startTime}</if>-->
-<!--        </where>-->
-<!--        order by create_time desc-->
-<!--    </select>-->
     <select id="pageQueryByWorker" resultType="OrderRepair">
         select * from repair_order
         <where>
