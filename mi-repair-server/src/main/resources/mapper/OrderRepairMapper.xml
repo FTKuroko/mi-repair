@@ -51,11 +51,11 @@
     <select id="pageQueryByUserId" resultMap="OrderRepair">
         select * from repair_order
         <where>
-            <if test="userId != null and userId != ''">
-                and user_id = #{userId}
-            </if>
             <if test="id != null and id != ''">
                 and id = #{id}
+            </if>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
             </if>
             <if test="status != null and status != ''">
                 and status = #{status}
@@ -92,16 +92,17 @@
             id = #{orderId}
         </where>
     </update>
+
     <select id="pageQueryByWorker" resultType="OrderRepair">
         select * from repair_order
         <where>
             <if test="id != null and id != ''">
                 and id = #{id}
             </if>
-            <if test="status != null and status != '' and status == '0'">
+            <if test="status != null and status != '' and status != 25">
                 and status = #{status} and worker_id = #{workerId}
             </if>
-            <if test="status != null and status != '' and status == '25'">
+            <if test="status != null and status != '' and status == 25">
                 and status = 0
             </if>
             <if test="status == null or status == ''">
