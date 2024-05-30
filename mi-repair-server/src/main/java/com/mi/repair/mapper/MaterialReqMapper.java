@@ -5,6 +5,8 @@ import com.mi.repair.dto.MaterialReqPageQueryDTO;
 import com.mi.repair.entity.MaterialReq;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * @author Kuroko
  * @description
@@ -16,4 +18,6 @@ public interface MaterialReqMapper {
     long submit(MaterialReq materialReq);
 
     Page<MaterialReq> pageQuery(MaterialReqPageQueryDTO queryDTO);
+
+    List<MaterialReq> selectByOrderId(Long orderId);
 }

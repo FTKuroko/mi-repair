@@ -27,4 +27,9 @@
     <update id="updateByUserPay">
         update order_pay set status = 1 where id = #{id}
     </update>
+
+    <insert id="insert" parameterType="com.mi.repair.entity.OrderPay" useGeneratedKeys="true" keyProperty="id">
+        insert into order_pay(order_id,user_id,worker_id,price,status,create_time,update_time)
+        values(#{orderId},#{userId},#{workerId},#{price},#{status},#{createTime},#{updateTime})
+    </insert>
 </mapper>

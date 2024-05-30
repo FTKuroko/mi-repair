@@ -5,13 +5,18 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ZipUtil;
 import com.mi.repair.config.MinioConfig;
 import com.mi.repair.dto.FileDTO;
+import com.mi.repair.entity.MaterialReq;
+import com.mi.repair.entity.OrderRepair;
 import com.mi.repair.enums.RepairOrderEvent;
 import com.mi.repair.enums.RepairOrderStatus;
 import com.mi.repair.mapper.FileMapper;
+import com.mi.repair.mapper.MaterialReqMapper;
 import com.mi.repair.mapper.OrderRepairMapper;
 import com.mi.repair.service.FileService;
 import com.mi.repair.entity.File;
 import com.mi.repair.enums.FileStatus;
+import com.mi.repair.service.OrderRepairService;
+import com.mi.repair.service.ScheduleService;
 import com.mi.repair.utils.FileCompressionUtil;
 import com.mi.repair.utils.StateMachineUtil;
 import io.minio.BucketExistsArgs;
@@ -49,6 +54,10 @@ public class FileServiceImpl implements FileService {
     private FileMapper fileMapper;
     @Autowired
     private OrderRepairMapper orderRepairMapper;
+    @Autowired
+    private OrderRepairService orderRepairService;
+    @Autowired
+    private ScheduleService scheduleService;
     @Autowired
     private StateMachineUtil stateMachineUtil;
     @Autowired
@@ -255,6 +264,9 @@ public class FileServiceImpl implements FileService {
         }catch (Exception e){
             e.getMessage();
         }
+        orderRepairService.createPayOrder(orderId);
+        orderRepairMapper.updateStatusById(orderId, RepairOrderStatus.WAITING_PAY.getCode());
+        scheduleService.insertSchedule(orderId, RepairOrderStatus.WAITING_PAY.getCode(), 1);
         return null;
     }
 
