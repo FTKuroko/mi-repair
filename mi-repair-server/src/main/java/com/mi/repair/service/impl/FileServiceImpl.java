@@ -265,6 +265,7 @@ public class FileServiceImpl implements FileService {
             e.getMessage();
         }
         orderRepairService.createPayOrder(orderId);
+        stateMachineUtil.saveAndSendEvent(orderId,RepairOrderEvent.RETEST_SUCCESS);
         orderRepairMapper.updateStatusById(orderId, RepairOrderStatus.WAITING_PAY.getCode());
         scheduleService.insertSchedule(orderId, RepairOrderStatus.WAITING_PAY.getCode(), 1);
         return null;
