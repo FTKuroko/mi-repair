@@ -19,4 +19,12 @@
         </where>
         order by create_time desc
     </select>
+
+    <select id="selectPayOrderById" resultType="com.mi.repair.entity.OrderPay">
+        select * from order_pay where id = #{id}
+    </select>
+
+    <update id="updateByUserPay">
+        update order_pay set status = 1 where id = #{id}
+    </update>
 </mapper>

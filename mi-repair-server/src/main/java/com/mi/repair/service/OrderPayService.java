@@ -1,6 +1,7 @@
 package com.mi.repair.service;
 
 import com.mi.repair.dto.OrderPayPageQueryDTO;
+import com.mi.repair.entity.OrderPay;
 import com.mi.repair.result.PageResult;
 
 /**
@@ -11,4 +12,8 @@ import com.mi.repair.result.PageResult;
 public interface OrderPayService {
 
     PageResult pageQuery(OrderPayPageQueryDTO pageQueryDTO);
+
+    OrderPay selectPayOrderById(Long id);
+
+    int updateByUserPay(Long id);
 }

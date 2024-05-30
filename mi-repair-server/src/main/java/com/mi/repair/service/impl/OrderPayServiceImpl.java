@@ -46,4 +46,13 @@ public class OrderPayServiceImpl implements OrderPayService {
         }
         return new PageResult(total, pageInfo);
     }
+
+    public OrderPay selectPayOrderById(Long id) {
+        return orderPayMapper.selectPayOrderById(id);
+    }
+
+    @Override
+    public int updateByUserPay(Long id) {
+        return orderPayMapper.updateByUserPay(id);
+    }
 }

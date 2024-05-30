@@ -12,4 +12,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface OrderPayMapper {
 
     Page<OrderPay> pageQueryByUserId(OrderPayPageQueryDTO pageQueryDTO);
+
+    OrderPay selectPayOrderById(Long id);
+
+    int updateByUserPay(Long id);
 }
