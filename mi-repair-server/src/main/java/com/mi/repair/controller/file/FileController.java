@@ -73,10 +73,10 @@ public class FileController {
     }
 
     @GetMapping("/{orderId}/preview")
-    public Result<String> preview(@PathVariable Long orderId){
+    public Result<List<File>> preview(@PathVariable Long orderId){
         List<File> preview = fileService.preview(orderId);
         log.info("图片文件:{}", preview);
-        return Result.success("文件预览成功");
+        return Result.success(preview);
     }
 
     @PostMapping("/{orderId}/uploadVideo")
