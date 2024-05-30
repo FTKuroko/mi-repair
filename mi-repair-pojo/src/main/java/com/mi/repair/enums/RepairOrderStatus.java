@@ -23,13 +23,13 @@ public enum RepairOrderStatus {
      */
     , APPLICATION_MATERIALS("申请材料", 13)
 
-    , WAITING_MATERIALS("等待材料", 14)
+//    , WAITING_MATERIALS("等待材料", 14)
 
     , REPAIR("维修", 15)
 
     , RETEST("复检", 16)
 
-    , REPAIR_FAILED("维修失败",17)
+//    , REPAIR_FAILED("维修失败",17)
     /*
      *  支付模块
      */
