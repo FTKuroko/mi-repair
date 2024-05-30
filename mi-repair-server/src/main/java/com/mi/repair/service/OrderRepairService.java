@@ -68,4 +68,6 @@ public interface OrderRepairService {
     int orderRepairSuccess(Long id);
 
     int orderRepairFailed(Long id);
+
+    int returnDevice(Long id);
 }

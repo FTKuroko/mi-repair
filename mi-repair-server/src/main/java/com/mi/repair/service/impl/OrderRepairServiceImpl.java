@@ -5,13 +5,11 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.mi.repair.context.BaseContext;
 import com.mi.repair.dto.*;
-import com.mi.repair.entity.Schedule;
 import com.mi.repair.enums.MaterialReqStatus;
 import com.mi.repair.enums.RepairOrderEvent;
 import com.mi.repair.enums.RepairOrderStatus;
 import com.mi.repair.enums.StorageType;
 import com.mi.repair.mapper.OrderRepairMapper;
-import com.mi.repair.mapper.ScheduleMapper;
 import com.mi.repair.result.PageResult;
 import com.mi.repair.service.OrderRepairService;
 import com.mi.repair.entity.MaterialReq;
@@ -20,12 +18,12 @@ import com.mi.repair.entity.Storage;
 import com.mi.repair.exception.BaseException;
 import com.mi.repair.mapper.MaterialReqMapper;
 import com.mi.repair.mapper.StorageMapper;
+import com.mi.repair.service.ScheduleService;
 import com.mi.repair.utils.StateMachineUtil;
 import com.mi.repair.vo.OrderRepairSubmitVO;
 import com.mi.repair.vo.OrderRepairVO;
 import com.mi.repair.vo.RepairMaterialsVO;
 import com.mi.repair.webSocket.WebSocketServer;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,8 +52,9 @@ public class OrderRepairServiceImpl implements OrderRepairService {
     private WebSocketServer webSocketServer;
     @Autowired
     private StateMachineUtil stateMachineUtil;
+
     @Autowired
-    private ScheduleMapper scheduleMapper;
+    private ScheduleService scheduleService;
 
     @Override
     public OrderRepairSubmitVO submitOrderRepair(OrderRepairSubmitDTO orderRepairSubmitDTO) {
@@ -70,17 +69,11 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         orderRepair.setCreateTime(time);
         orderRepair.setUpdateTime(time);
         // 4、插入数据
-        long orderId = orderRepairMapper.submit(orderRepair);
-        Schedule schedule = new Schedule();
-        schedule.setOrderId(orderId);
-        schedule.setStatus(RepairOrderStatus.WAITING_FOR_USER_CONFIRMATION.getCode());
-        schedule.setUserId(id);
-        schedule.setType(0);
-        schedule.setCreateTime(time);
-        schedule.setUpdateTime(time);
-        scheduleMapper.insertSchedule(schedule);
+        orderRepairMapper.submit(orderRepair);
         OrderRepairSubmitVO submitVO = OrderRepairSubmitVO.builder().id(orderRepair.getId()).orderTime(time).build();
-        // 5、下单成功，向工程师端发起来单提醒   TODO: 待前后端联调
+        // 5、插入进度
+        scheduleService.insertSchedule(orderRepair.getId(),RepairOrderStatus.WAITING_FOR_WORKER_ACCEPTANCE.getCode(),0);
+        // 6、下单成功，向工程师端发起来单提醒   TODO: 待前后端联调
         Map map = new HashMap();
         map.put("type", 1);
         map.put("orderId", orderRepair.getId());
@@ -94,25 +87,15 @@ public class OrderRepairServiceImpl implements OrderRepairService {
     public int confirm(Long orderId){
         // 1、 查找维修单信息
         OrderRepair orderRepair = orderRepairMapper.selectById(orderId);
-        // 2、 获取当前用户 id
+        // 2、插入进度
+        scheduleService.insertSchedule(orderId,RepairOrderStatus.CONFIRMED.getCode(),0);
+        // 3、 获取当前用户 id
         Long userId = BaseContext.getCurrentId();
-        // 3、 判断当前维修单是否属于该用户
+        // 4、 判断当前维修单是否属于该用户
         if(!userId.equals(orderRepair.getUserId())){
             return 0;
         }
-        int i = orderRepairMapper.confirm(orderId);
-        if(i > 0){
-            Schedule schedule = new Schedule();
-            schedule.setOrderId(orderId);
-            schedule.setUserId(userId);
-            schedule.setType(0);
-            schedule.setStatus(RepairOrderStatus.CONFIRMED.getCode());
-            LocalDateTime time = LocalDateTime.now();
-            schedule.setCreateTime(time);
-            schedule.setUpdateTime(time);
-            scheduleMapper.insertSchedule(schedule);
-        }
-        return i;
+        return orderRepairMapper.confirm(orderId);
     }
 
     @Override
@@ -148,38 +131,18 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         if(!userId.equals(orderRepair.getUserId()) || orderRepair.getStatus().equals(RepairOrderStatus.REPAIR.getCode())){
             return 0;
         }
-        int i = orderRepairMapper.delete(orderId);
-        if(i > 0){
-            Schedule schedule = new Schedule();
-            schedule.setOrderId(orderId);
-            schedule.setUserId(userId);
-            schedule.setType(0);
-            schedule.setStatus(RepairOrderStatus.CANCEL.getCode());
-            LocalDateTime time = LocalDateTime.now();
-            schedule.setCreateTime(time);
-            schedule.setUpdateTime(time);
-            scheduleMapper.insertSchedule(schedule);
-        }
-        return i;
+        // 插入进度
+        scheduleService.insertSchedule(orderId,RepairOrderStatus.CANCEL.getCode(),1);
+        return orderRepairMapper.delete(orderId);
     }
 
     @Override
     public int workerConfirm(Long orderId){
         int code = RepairOrderStatus.WAITING_FOR_USER_CONFIRMATION.getCode();
+        // 插入进度
+        scheduleService.insertSchedule(orderId,code,1);
         Long workerId = BaseContext.getCurrentId();
-        int i = orderRepairMapper.updateStatus(orderId, code, workerId);
-        if(i > 0){
-            Schedule schedule = new Schedule();
-            schedule.setOrderId(orderId);
-            schedule.setUserId(workerId);
-            schedule.setType(1);
-            schedule.setStatus(RepairOrderStatus.WAITING_FOR_USER_CONFIRMATION.getCode());
-            LocalDateTime time = LocalDateTime.now();
-            schedule.setCreateTime(time);
-            schedule.setUpdateTime(time);
-            scheduleMapper.insertSchedule(schedule);
-        }
-        return i;
+        return orderRepairMapper.updateStatus(orderId, code,workerId);
     }
 
     @Override
@@ -223,16 +186,7 @@ public class OrderRepairServiceImpl implements OrderRepairService {
             }
             stateMachineUtil.saveAndSendEvent(orderId, RepairOrderEvent.APPLICATION_MATERIALS_SUCCESS);
             orderRepairMapper.updateStatusById(orderId,RepairOrderStatus.REPAIR.getCode());
-            Long workerId = BaseContext.getCurrentId();
-            Schedule schedule = new Schedule();
-            schedule.setOrderId(orderId);
-            schedule.setUserId(workerId);
-            schedule.setType(1);
-            schedule.setStatus(RepairOrderStatus.APPLICATION_MATERIALS.getCode());
-            LocalDateTime time = LocalDateTime.now();
-            schedule.setCreateTime(time);
-            schedule.setUpdateTime(time);
-            scheduleMapper.insertSchedule(schedule);
+            scheduleService.insertSchedule(orderId,RepairOrderStatus.REPAIR.getCode(),1);
         }
         return voList;
     }
@@ -245,19 +199,8 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         Long workerId = BaseContext.getCurrentId();
         // 3、 判断当前维修单是否属于该工程师以及维修单当前状态是否为维修状态
         if(workerId.equals(orderRepair.getWorkerId()) && orderRepair.getStatus().equals(RepairOrderStatus.REPAIR.getCode())){
-            int i = orderRepairMapper.updateStatusById(orderId, RepairOrderStatus.RETEST.getCode());
-            if(i > 0){
-                Schedule schedule = new Schedule();
-                schedule.setOrderId(orderId);
-                schedule.setUserId(workerId);
-                schedule.setType(1);
-                schedule.setStatus(RepairOrderStatus.REPAIR.getCode());
-                LocalDateTime time = LocalDateTime.now();
-                schedule.setCreateTime(time);
-                schedule.setUpdateTime(time);
-                scheduleMapper.insertSchedule(schedule);
-            }
-            return i;
+            scheduleService.insertSchedule(orderId,RepairOrderStatus.RETEST.getCode(),1);
+            return orderRepairMapper.updateStatusById(orderId,RepairOrderStatus.RETEST.getCode());
         }
         return 0;
     }
@@ -270,19 +213,26 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         Long workerId = BaseContext.getCurrentId();
         // 3、 判断当前维修单是否属于该工程师以及维修单当前状态是否为维修状态
         if(workerId.equals(orderRepair.getWorkerId()) && orderRepair.getStatus().equals(RepairOrderStatus.REPAIR.getCode())){
-            int i = orderRepairMapper.updateStatusById(orderId, RepairOrderStatus.APPLICATION_MATERIALS.getCode());
-            if(i > 0){
-                Schedule schedule = new Schedule();
-                schedule.setOrderId(orderId);
-                schedule.setUserId(workerId);
-                schedule.setType(1);
-                schedule.setStatus(RepairOrderStatus.APPLICATION_MATERIALS.getCode());
-                LocalDateTime time = LocalDateTime.now();
-                schedule.setCreateTime(time);
-                schedule.setUpdateTime(time);
-                scheduleMapper.insertSchedule(schedule);
-            }
-            return i;
+            scheduleService.insertSchedule(orderId,RepairOrderStatus.APPLICATION_MATERIALS.getCode(),1);
+            return orderRepairMapper.updateStatusById(orderId,RepairOrderStatus.APPLICATION_MATERIALS.getCode());
+        }
+        return 0;
+    }
+
+    /**
+     * 归还设备
+     * @param id
+     * @return
+     */
+    @Override
+    public int returnDevice(Long id) {
+        OrderRepair orderRepair = orderRepairMapper.selectById(id);
+        // 2、 获取当前工程师 id
+        Long workerId = BaseContext.getCurrentId();
+        // 3、 判断当前维修单是否属于该工程师以及维修单当前状态是否为维修状态
+        if(workerId.equals(orderRepair.getWorkerId()) && orderRepair.getStatus().equals(RepairOrderStatus.PAYED.getCode())){
+            scheduleService.insertSchedule(id,RepairOrderStatus.DONE.getCode(),1);
+            return orderRepairMapper.updateStatusById(id,RepairOrderStatus.DONE.getCode());
         }
         return 0;
     }

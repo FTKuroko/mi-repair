@@ -72,4 +72,15 @@ public class WorkOrderRepairController {
 
         return i > 0 ? Result.success("工程师维修失败") : Result.error("维修失败操作失效");
     }
+
+    @PutMapping("/returnDevice")
+    @ApiOperation("归还设备")
+    public Result<String> returnDevice(@RequestParam("id")Long id) {
+        log.info("归还设备:{}", id);
+        // 1、 修改订单状态
+        int i = orderRepairService.returnDevice(id);
+        // TODO：2、 向用户发起通知
+
+        return i > 0 ? Result.success("归还设备成功") : Result.error("归还设备失败");
+    }
 }
