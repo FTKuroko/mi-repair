@@ -1,6 +1,7 @@
 package com.mi.repair.controller.file;
 
 import com.mi.repair.dto.FileDTO;
+import com.mi.repair.entity.File;
 import com.mi.repair.service.FileService;
 import com.mi.repair.result.Result;
 import io.swagger.annotations.Api;
@@ -69,6 +70,13 @@ public class FileController {
     public Result<String> upload(@RequestParam(name = "file") MultipartFile file,@RequestParam("orderId") Long orderId){
         fileService.upload(file, orderId);
         return Result.success("文件上传成功");
+    }
+
+    @GetMapping("/{orderId}/preview")
+    public Result<String> preview(@PathVariable Long orderId){
+        List<File> preview = fileService.preview(orderId);
+        log.info("图片文件:{}", preview);
+        return Result.success("文件预览成功");
     }
 
 }
