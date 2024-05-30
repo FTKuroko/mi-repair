@@ -5,10 +5,9 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.mi.repair.context.BaseContext;
 import com.mi.repair.dto.*;
-import com.mi.repair.enums.MaterialReqStatus;
-import com.mi.repair.enums.RepairOrderEvent;
-import com.mi.repair.enums.RepairOrderStatus;
-import com.mi.repair.enums.StorageType;
+import com.mi.repair.entity.OrderPay;
+import com.mi.repair.enums.*;
+import com.mi.repair.mapper.OrderPayMapper;
 import com.mi.repair.mapper.OrderRepairMapper;
 import com.mi.repair.result.PageResult;
 import com.mi.repair.service.OrderRepairService;
@@ -48,6 +47,8 @@ public class OrderRepairServiceImpl implements OrderRepairService {
     private StorageMapper storageMapper;
     @Autowired
     private MaterialReqMapper matrialReqMapper;
+    @Autowired
+    private OrderPayMapper orderPayMapper;
     @Autowired
     private WebSocketServer webSocketServer;
     @Autowired
@@ -308,5 +309,33 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         long i = matrialReqMapper.submit(materialReq);
         RepairMaterialsVO materialsVO = new RepairMaterialsVO(i, time);
         return materialsVO;
+    }
+
+    /**
+     * 创建支付订单
+     * @param orderId
+     * @return
+     */
+    @Override
+    public OrderPayDTO createPayOrder(Long orderId) {
+        List<MaterialReq> materialReqs = matrialReqMapper.selectByOrderId(orderId);
+        OrderRepair orderRepair = orderRepairMapper.selectById(orderId);
+        OrderPayDTO orderPayDTO = new OrderPayDTO();
+        orderPayDTO.setOrderId(orderId);
+        orderPayDTO.setUserId(orderRepair.getUserId());
+        orderPayDTO.setWorkerId(orderRepair.getWorkerId());
+        BigDecimal price = BigDecimal.valueOf(0);
+        for(MaterialReq materialReq : materialReqs){
+            price.add(materialReq.getPriceSum());
+        }
+        orderPayDTO.setPrice(price);
+        orderPayDTO.setStatus(OrderPayStatus.NO.getCode());
+        LocalDateTime time = LocalDateTime.now();
+        OrderPay orderPay = new OrderPay();
+        BeanUtils.copyProperties(orderPayDTO, orderPay);
+        orderPay.setCreateTime(time);
+        orderPay.setUpdateTime(time);
+        orderPayMapper.insert(orderPay);
+        return orderPayDTO;
     }
 }

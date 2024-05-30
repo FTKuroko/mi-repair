@@ -16,4 +16,6 @@ public interface OrderPayMapper {
     OrderPay selectPayOrderById(Long id);
 
     int updateByUserPay(Long id);
+
+    int insert(OrderPay orderPay);
 }

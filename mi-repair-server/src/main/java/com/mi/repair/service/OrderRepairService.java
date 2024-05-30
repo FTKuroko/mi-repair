@@ -1,10 +1,7 @@
 package com.mi.repair.service;
 
-import com.mi.repair.dto.OrderRepairSubmitDTO;
-import com.mi.repair.dto.UserOrderPageQueryDTO;
+import com.mi.repair.dto.*;
 import com.mi.repair.result.PageResult;
-import com.mi.repair.dto.RepairMaterialsDTO;
-import com.mi.repair.dto.WorkerOrderPageQueryDTO;
 import com.mi.repair.vo.OrderRepairSubmitVO;
 import com.mi.repair.vo.RepairMaterialsVO;
 
@@ -70,4 +67,6 @@ public interface OrderRepairService {
     int orderRepairFailed(Long id);
 
     int returnDevice(Long id);
+
+    OrderPayDTO createPayOrder(Long orderId);
 }

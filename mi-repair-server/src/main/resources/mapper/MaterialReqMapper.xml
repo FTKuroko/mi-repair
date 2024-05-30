@@ -40,4 +40,13 @@
             </if>
         </where>
     </select>
+
+    <select id="selectByOrderId" resultType="com.mi.repair.entity.MaterialReq">
+        select * from material_req
+        <where>
+            <if test="orderId != null and orderId != ''">
+                and order_id = #{orderId}
+            </if>
+        </where>
+    </select>
 </mapper>
