@@ -27,4 +27,6 @@ public interface FileService {
     String upload(MultipartFile file, Long orderId);
 
     List<File> preview(Long orderId);
+
+    String uploadVideo(MultipartFile file, Long orderId);
 }

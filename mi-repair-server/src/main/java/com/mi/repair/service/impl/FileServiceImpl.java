@@ -12,6 +12,7 @@ import com.mi.repair.mapper.OrderRepairMapper;
 import com.mi.repair.service.FileService;
 import com.mi.repair.entity.File;
 import com.mi.repair.enums.FileStatus;
+import com.mi.repair.utils.FileCompressionUtil;
 import com.mi.repair.utils.StateMachineUtil;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
@@ -24,7 +25,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -52,7 +57,12 @@ public class FileServiceImpl implements FileService {
     private MinioClient minioClient;
     @Value("${mi-repair.minio.bucket.files}")
     private String bucket_files;
-
+    @Value("${mi-repair.minio.bucket.videofiles}")
+    private String bucket_videofiles;
+    // 视频文件最大大小
+    private static final long MAX_VIDE0_SIZE = 10 * 1024 * 1024;
+    // 图片文件最大大小
+    private static final long MAX_FILE_SIZE = 2 * 1024 * 1024;
     @Override
     public void saveFileInfo(List<MultipartFile> files, Long orderId){
         String  uploadDir = UPLOAD_DIR + orderId;
@@ -195,5 +205,64 @@ public class FileServiceImpl implements FileService {
     public List<File> preview(Long orderId) {
         List<File> files = fileMapper.preview(orderId);
         return files;
+    }
+
+    @Override
+    public String uploadVideo(MultipartFile file, Long orderId) {
+
+        try{
+            // 判断桶是否存在
+            boolean bucketExists = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket_videofiles).build());
+            if(!bucketExists){
+                // 创建一个新的桶
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket_videofiles).build());
+            }
+            log.info("视频文件开始上传:{}", file);
+            // TODO: 暂时缺少对文件大小的判断,大于10MB的文件以压缩包的形式上传
+            java.io.File convertMultiPartToFile = convertMultiPartToFile(file);
+            if(convertMultiPartToFile.length() > MAX_VIDE0_SIZE){
+                convertMultiPartToFile = FileCompressionUtil.compressFile(convertMultiPartToFile, MAX_VIDE0_SIZE);
+            }
+            // 获取文件的真实名称
+            String originalFilename = convertMultiPartToFile.getName();
+            // 文件扩展名
+            InputStream is = new FileInputStream(convertMultiPartToFile);
+            String contentType = Files.probeContentType(Paths.get(originalFilename));
+            if(contentType == null){
+                contentType = "application/octet-stream";
+            }
+            // 构建文件上传相关信息
+            PutObjectArgs args = PutObjectArgs.builder()
+                    .bucket(bucket_videofiles)
+                    .object(originalFilename)
+                    .stream(is, is.available(), -1)
+                    .contentType(contentType)
+                    .build();
+            // 将文件上传到 minio 服务器
+            minioClient.putObject(args);
+            // 拼接文件上传地址，存入数据库
+            String url = minioConfig.getEndpoint() + "/" + bucket_videofiles + "/" + originalFilename;
+            log.info("视频文件上传成功:{}， url:{}", originalFilename, url);
+
+            File f = new File();
+            LocalDateTime now = LocalDateTime.now();
+            f.setType(2);
+            f.setPath(url);
+            f.setCreateTime(now);
+            f.setUpdateTime(now);
+            f.setOrderId(orderId);
+            fileMapper.saveFile(f);
+        }catch (Exception e){
+            e.getMessage();
+        }
+        return null;
+    }
+
+    private java.io.File convertMultiPartToFile(MultipartFile file) throws IOException {
+        java.io.File convFile = new java.io.File(System.getProperty("java.io.tmpdir") + "/" + file.getOriginalFilename());
+        try (FileOutputStream fos = new FileOutputStream(convFile)) {
+            fos.write(file.getBytes());
+        }
+        return convFile;
     }
 }
