@@ -7,10 +7,12 @@ public enum RepairOrderEvent {
     ,WORKER_ACCEPT_ORDER("工程师接收")
 
     ,USER_CONFIRM_ORDER("用户确认")
+//
+//    ,WORKER_INSPECTION_SUCCESS("工程师检测成功")
+//
+//    ,WORKER_INSPECTION_FAILED("工程师检测失败")
 
-    ,WORKER_INSPECTION_SUCCESS("工程师检测成功")
-
-    ,WORKER_INSPECTION_FAILED("工程师检测失败")
+    ,UPLOAD_PICTURES("上传图片")
 
     ,APPLICATION_MATERIALS_SUCCESS("申请材料成功")
 

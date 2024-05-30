@@ -64,4 +64,8 @@ public interface OrderRepairService {
      * @return
      */
     List<RepairMaterialsVO> applyMaterials(List<RepairMaterialsDTO> list);
+
+    int orderRepairSuccess(Long id);
+
+    int orderRepairFailed(Long id);
 }
