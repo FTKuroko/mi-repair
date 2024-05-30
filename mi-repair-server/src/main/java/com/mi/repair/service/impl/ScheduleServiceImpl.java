@@ -1,6 +1,7 @@
 package com.mi.repair.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.mi.repair.context.BaseContext;
 import com.mi.repair.dto.ScheduleDTO;
 import com.mi.repair.entity.Schedule;
 import com.mi.repair.enums.RepairOrderStatus;
@@ -15,6 +16,7 @@ import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +28,6 @@ import java.util.List;
 public class ScheduleServiceImpl implements ScheduleService {
     @Autowired
     private ScheduleMapper scheduleMapper;
-
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private WorkerMapper workerMapper;
 
     @Override
     public PageResult getScheduleByOrderId(ScheduleDTO scheduleDTO) {
@@ -49,5 +45,19 @@ public class ScheduleServiceImpl implements ScheduleService {
             result.add(scheduleVo);
         }
         return  new PageResult(size,result);
+    }
+
+    @Override
+    public int insertSchedule(Long orderId, Integer status, Integer type) {
+        Schedule schedule = new Schedule();
+        Long id = BaseContext.getCurrentId();
+        schedule.setId(id);
+        schedule.setOrderId(orderId);
+        schedule.setStatus(status);
+        schedule.setType(type);
+        LocalDateTime time = LocalDateTime.now();
+        schedule.setCreateTime(time);
+        schedule.setUpdateTime(time);
+        return scheduleMapper.insertSchedule(schedule);
     }
 }

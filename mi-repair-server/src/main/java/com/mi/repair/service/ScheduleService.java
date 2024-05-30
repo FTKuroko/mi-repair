@@ -8,4 +8,6 @@ import com.mi.repair.result.PageResult;
  */
 public interface ScheduleService {
     PageResult getScheduleByOrderId(ScheduleDTO scheduleDTO);
+
+    int insertSchedule(Long orderId,Integer status,Integer type);
 }
