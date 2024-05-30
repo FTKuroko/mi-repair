@@ -23,5 +23,6 @@
     <select id="preview" resultType="File">
         select * from file
         where order_id = #{orderId}
+        and type = 1
     </select>
 </mapper>

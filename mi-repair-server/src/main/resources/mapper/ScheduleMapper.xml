@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mi.repair.mapper.ScheduleMapper">
-    <insert id="insertSchedule">
+    <insert id="insertSchedule" parameterType="com.mi.repair.entity.Schedule" useGeneratedKeys="true" keyProperty="id">
         insert into schedule(
         <if test="id != null">id,</if>
         <if test="userId != null and userId != ''">user_id,</if>
