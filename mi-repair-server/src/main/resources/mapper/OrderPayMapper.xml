@@ -13,7 +13,7 @@
             <if test="id != null and id != ''">
                 and id = #{id}
             </if>
-            <if test="status != null and status != ''">
+            <if test="status != null">
                 and status = #{status}
             </if>
         </where>
