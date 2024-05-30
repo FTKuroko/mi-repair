@@ -6,6 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.mi.repair.context.BaseContext;
 import com.mi.repair.dto.*;
 import com.mi.repair.enums.MaterialReqStatus;
+import com.mi.repair.enums.RepairOrderEvent;
 import com.mi.repair.enums.RepairOrderStatus;
 import com.mi.repair.enums.StorageType;
 import com.mi.repair.mapper.OrderRepairMapper;
@@ -17,6 +18,7 @@ import com.mi.repair.entity.Storage;
 import com.mi.repair.exception.BaseException;
 import com.mi.repair.mapper.MaterialReqMapper;
 import com.mi.repair.mapper.StorageMapper;
+import com.mi.repair.utils.StateMachineUtil;
 import com.mi.repair.vo.OrderRepairSubmitVO;
 import com.mi.repair.vo.OrderRepairVO;
 import com.mi.repair.vo.RepairMaterialsVO;
@@ -47,6 +49,8 @@ public class OrderRepairServiceImpl implements OrderRepairService {
     private MaterialReqMapper matrialReqMapper;
     @Autowired
     private WebSocketServer webSocketServer;
+    @Autowired
+    private StateMachineUtil stateMachineUtil;
 
     @Override
     public OrderRepairSubmitVO submitOrderRepair(OrderRepairSubmitDTO orderRepairSubmitDTO) {
@@ -159,9 +163,17 @@ public class OrderRepairServiceImpl implements OrderRepairService {
     @Override
     public List<RepairMaterialsVO> applyMaterials(List<RepairMaterialsDTO> list) {
         List<RepairMaterialsVO> voList = new ArrayList<>();
-        for(RepairMaterialsDTO repairMaterialsDTO : list){
-            RepairMaterialsVO vo = applyOne(repairMaterialsDTO);
-            voList.add(vo);
+        if (list != null) {
+            Long orderId = list.get(0).getOrderId();
+            for (RepairMaterialsDTO repairMaterialsDTO : list) {
+                RepairMaterialsVO vo = applyOne(repairMaterialsDTO);
+                voList.add(vo);
+            }
+            if (orderId == null) {
+                throw new BaseException("申请材料订单号为空");
+            }
+            stateMachineUtil.saveAndSendEvent(orderId, RepairOrderEvent.APPLICATION_MATERIALS_SUCCESS);
+            orderRepairMapper.updateStatusById(orderId,RepairOrderStatus.REPAIR.getCode());
         }
         return voList;
     }
