@@ -230,7 +230,7 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         // 2、 获取当前工程师 id
         Long workerId = BaseContext.getCurrentId();
         // 3、 判断当前维修单是否属于该工程师以及维修单当前状态是否为维修状态
-        if(workerId.equals(orderRepair.getWorkerId()) && orderRepair.getStatus().equals(RepairOrderStatus.REPAIR.getCode())){
+        if(workerId.equals(orderRepair.getWorkerId()) && orderRepair.getStatus().equals(RepairOrderStatus.PAYED.getCode())){
             scheduleService.insertSchedule(id,RepairOrderStatus.DONE.getCode(),1);
             return orderRepairMapper.updateStatusById(id,RepairOrderStatus.DONE.getCode());
         }

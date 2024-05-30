@@ -51,7 +51,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     public int insertSchedule(Long orderId, Integer status, Integer type) {
         Schedule schedule = new Schedule();
         Long id = BaseContext.getCurrentId();
-        schedule.setId(id);
+        schedule.setUserId(id);
         schedule.setOrderId(orderId);
         schedule.setStatus(status);
         schedule.setType(type);
