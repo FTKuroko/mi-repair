@@ -99,7 +99,7 @@ public class RepairOrderStateMachineConfig extends EnumStateMachineConfigurerAda
                 .target(RepairOrderStatus.RETEST)
                 .event(RepairOrderEvent.REPAIR_SUCCESS)
                 .and()
-                //维修 -> 维修失败 -> 维修失败状态
+                //维修 -> 维修失败 -> 申请材料
                 .withExternal()
                 .source(RepairOrderStatus.REPAIR)
                 .target(RepairOrderStatus.APPLICATION_MATERIALS)
@@ -112,18 +112,17 @@ public class RepairOrderStateMachineConfig extends EnumStateMachineConfigurerAda
                 .event(RepairOrderEvent.RETEST_SUCCESS)
                 .and()
                 //复检 -> 复检失败 -> 申请材料
-                .withExternal()
-                .source(RepairOrderStatus.RETEST)
-                .target(RepairOrderStatus.APPLICATION_MATERIALS)
-                .event(RepairOrderEvent.RETEST_FAILED)
-                .and()
+//                .withExternal()
+//                .source(RepairOrderStatus.RETEST)
+//                .target(RepairOrderStatus.APPLICATION_MATERIALS)
+//                .event(RepairOrderEvent.RETEST_FAILED)
+//                .and()
 //                //复检 -> 复检超出次数 -> 维修失败
 //                .withExternal()
 //                .source(RepairOrderStatus.RETEST)
 //                .target(RepairOrderStatus.REPAIR_FAILED)
 //                .event(RepairOrderEvent.RETEST_NUMBER_OF_EXCEEDANCES)
 //                .and()
-
                 //待支付 -> 支付 -> 已支付
                 .withExternal()
                 .source(RepairOrderStatus.WAITING_PAY)
@@ -136,11 +135,11 @@ public class RepairOrderStateMachineConfig extends EnumStateMachineConfigurerAda
                 .target(RepairOrderStatus.DONE)
                 .event(RepairOrderEvent.DEVICE_RETURN)
                 .and()
-                //维修失败 -> 设备归还 -> 已完成
-                .withExternal()
-                .source(RepairOrderStatus.REPAIR_FAILED)
-                .target(RepairOrderStatus.DONE)
-                .event(RepairOrderEvent.DEVICE_RETURN)
+//                //维修失败 -> 设备归还 -> 已完成
+//                .withExternal()
+//                .source(RepairOrderStatus.REPAIR_FAILED)
+//                .target(RepairOrderStatus.DONE)
+//                .event(RepairOrderEvent.DEVICE_RETURN)
         ;
     }
 

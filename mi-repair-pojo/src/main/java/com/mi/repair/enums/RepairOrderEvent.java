@@ -16,7 +16,7 @@ public enum RepairOrderEvent {
 
     ,APPLICATION_MATERIALS_SUCCESS("申请材料成功")
 
-    ,APPLICATION_MATERIALS_FAILED("申请材料失败")
+//    ,APPLICATION_MATERIALS_FAILED("申请材料失败")
 
     ,REPAIR_SUCCESS("维修成功")
 
@@ -24,9 +24,9 @@ public enum RepairOrderEvent {
 
     ,RETEST_SUCCESS ("复检成功")
 
-    ,RETEST_FAILED ("复检失败")
-
-    ,RETEST_NUMBER_OF_EXCEEDANCES("复检超出次数")
+//    ,RETEST_FAILED ("复检失败")
+//
+//    ,RETEST_NUMBER_OF_EXCEEDANCES("复检超出次数")
 
     ,USER_PAY("用户支付")
 
