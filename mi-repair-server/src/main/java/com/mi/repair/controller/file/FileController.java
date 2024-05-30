@@ -66,7 +66,7 @@ public class FileController {
      * @return
      */
     @PostMapping("/uploadImage")
-    public Result<String> upload(@RequestParam(name = "file") MultipartFile file, Long orderId){
+    public Result<String> upload(@RequestParam(name = "file") MultipartFile file,@RequestParam("orderId") Long orderId){
         fileService.upload(file, orderId);
         return Result.success("文件上传成功");
     }
