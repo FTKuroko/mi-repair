@@ -55,11 +55,6 @@ public class RepairOrderStateMachineConfig extends EnumStateMachineConfigurerAda
                 .event(RepairOrderEvent.USER_CANCEL_ORDER)
                 .and()
 
-
-
-
-
-
 //                //用户已确认 -> 工程师检测失败 -> 等待工程师接单
 //                .withExternal()
 //                .source(RepairOrderStatus.CONFIRMED).target(RepairOrderStatus.WAITING_FOR_WORKER_ACCEPTANCE)
@@ -80,24 +75,24 @@ public class RepairOrderStateMachineConfig extends EnumStateMachineConfigurerAda
                 .target(RepairOrderStatus.REPAIR)
                 .event(RepairOrderEvent.APPLICATION_MATERIALS_SUCCESS)
                 .and()
-                //申请材料 -> 申请材料失败 -> 等待材料
-                .withExternal()
-                .source(RepairOrderStatus.APPLICATION_MATERIALS)
-                .target(RepairOrderStatus.WAITING_MATERIALS)
-                .event(RepairOrderEvent.APPLICATION_MATERIALS_FAILED)
-                .and()
+//                //申请材料 -> 申请材料失败 -> 等待材料
+//                .withExternal()
+//                .source(RepairOrderStatus.APPLICATION_MATERIALS)
+//                .target(RepairOrderStatus.WAITING_MATERIALS)
+//                .event(RepairOrderEvent.APPLICATION_MATERIALS_FAILED)
+//                .and()
 //                //等待材料 -> 用户取消 -> 维修失败
 //                .withExternal()
 //                .source(RepairOrderStatus.WAITING_MATERIALS)
 //                .target(RepairOrderStatus.REPAIR_FAILED)
 //                .event(RepairOrderEvent.USER_CANCEL_ORDER)
 //                .and()
-                //等待材料 -> 等待材料成功 -> 维修
-                .withExternal()
-                .source(RepairOrderStatus.WAITING_MATERIALS)
-                .target(RepairOrderStatus.REPAIR)
-                .event(RepairOrderEvent.APPLICATION_MATERIALS_SUCCESS)
-                .and()
+//                //等待材料 -> 等待材料成功 -> 维修
+//                .withExternal()
+//                .source(RepairOrderStatus.WAITING_MATERIALS)
+//                .target(RepairOrderStatus.REPAIR)
+//                .event(RepairOrderEvent.APPLICATION_MATERIALS_SUCCESS)
+//                .and()
                 //维修 -> 维修成功 -> 复检
                 .withExternal()
                 .source(RepairOrderStatus.REPAIR)
@@ -122,16 +117,12 @@ public class RepairOrderStateMachineConfig extends EnumStateMachineConfigurerAda
                 .target(RepairOrderStatus.APPLICATION_MATERIALS)
                 .event(RepairOrderEvent.RETEST_FAILED)
                 .and()
-                //复检 -> 复检超出次数 -> 维修失败
-                .withExternal()
-                .source(RepairOrderStatus.RETEST)
-                .target(RepairOrderStatus.REPAIR_FAILED)
-                .event(RepairOrderEvent.RETEST_NUMBER_OF_EXCEEDANCES)
-                .and()
-
-
-
-
+//                //复检 -> 复检超出次数 -> 维修失败
+//                .withExternal()
+//                .source(RepairOrderStatus.RETEST)
+//                .target(RepairOrderStatus.REPAIR_FAILED)
+//                .event(RepairOrderEvent.RETEST_NUMBER_OF_EXCEEDANCES)
+//                .and()
 
                 //待支付 -> 支付 -> 已支付
                 .withExternal()
