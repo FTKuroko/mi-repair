@@ -162,6 +162,8 @@ public class FileServiceImpl implements FileService {
         }catch (Exception e){
             log.error("文件上传异常:" + e.getMessage());
         }
+        orderRepairMapper.updateStatusById(orderId, RepairOrderStatus.APPLICATION_MATERIALS.getCode());
+        scheduleService.insertSchedule(orderId, RepairOrderStatus.APPLICATION_MATERIALS.getCode(), 1);
         return sb.toString();
     }
 
@@ -227,15 +229,17 @@ public class FileServiceImpl implements FileService {
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket_videofiles).build());
             }
             log.info("视频文件开始上传:{}", file);
-            // TODO: 暂时缺少对文件大小的判断,大于10MB的文件以压缩包的形式上传
-            java.io.File convertMultiPartToFile = convertMultiPartToFile(file);
-            if(convertMultiPartToFile.length() > MAX_VIDE0_SIZE){
-                convertMultiPartToFile = FileCompressionUtil.compressFile(convertMultiPartToFile, MAX_VIDE0_SIZE);
-            }
+//            // TODO: 暂时缺少对文件大小的判断,大于10MB的文件以压缩包的形式上传
+//            java.io.File convertMultiPartToFile = convertMultiPartToFile(file);
+//            if(convertMultiPartToFile.length() > MAX_VIDE0_SIZE){
+//                convertMultiPartToFile = FileCompressionUtil.compressFile(convertMultiPartToFile, MAX_VIDE0_SIZE);
+//            }
             // 获取文件的真实名称
-            String originalFilename = convertMultiPartToFile.getName();
+            //String originalFilename = convertMultiPartToFile.getName();
+            String originalFilename = file.getOriginalFilename();
             // 文件扩展名
-            InputStream is = new FileInputStream(convertMultiPartToFile);
+            //InputStream is = new FileInputStream(convertMultiPartToFile);
+            InputStream is = file.getInputStream();
             String contentType = Files.probeContentType(Paths.get(originalFilename));
             if(contentType == null){
                 contentType = "application/octet-stream";

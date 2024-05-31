@@ -46,7 +46,7 @@ public class OrderRepairServiceImpl implements OrderRepairService {
     @Autowired
     private StorageMapper storageMapper;
     @Autowired
-    private MaterialReqMapper matrialReqMapper;
+    private MaterialReqMapper materialReqMapper;
     @Autowired
     private OrderPayMapper orderPayMapper;
     @Autowired
@@ -275,7 +275,7 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         materialReq.setUpdateTime(time);
 
         // 插入数据库
-        long i = matrialReqMapper.submit(materialReq);
+        long i = materialReqMapper.submit(materialReq);
         RepairMaterialsVO materialsVO = new RepairMaterialsVO(i, time);
         return materialsVO;
     }
@@ -306,7 +306,7 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         materialReq.setUpdateTime(time);
 
         // 插入数据库
-        long i = matrialReqMapper.submit(materialReq);
+        long i = materialReqMapper.submit(materialReq);
         RepairMaterialsVO materialsVO = new RepairMaterialsVO(i, time);
         return materialsVO;
     }
@@ -318,15 +318,15 @@ public class OrderRepairServiceImpl implements OrderRepairService {
      */
     @Override
     public OrderPayDTO createPayOrder(Long orderId) {
-        List<MaterialReq> materialReqs = matrialReqMapper.selectByOrderId(orderId);
+        List<MaterialReq> materialReqs = materialReqMapper.selectByOrderId(orderId);
         OrderRepair orderRepair = orderRepairMapper.selectById(orderId);
         OrderPayDTO orderPayDTO = new OrderPayDTO();
         orderPayDTO.setOrderId(orderId);
         orderPayDTO.setUserId(orderRepair.getUserId());
         orderPayDTO.setWorkerId(orderRepair.getWorkerId());
-        BigDecimal price = BigDecimal.valueOf(0);
+        BigDecimal price = new BigDecimal(0);
         for(MaterialReq materialReq : materialReqs){
-            price.add(materialReq.getPriceSum());
+            price = price.add(materialReq.getPriceSum());
         }
         orderPayDTO.setPrice(price);
         orderPayDTO.setStatus(OrderPayStatus.NO.getCode());
