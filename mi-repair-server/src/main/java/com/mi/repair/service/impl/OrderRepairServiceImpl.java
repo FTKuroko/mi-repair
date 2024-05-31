@@ -133,7 +133,7 @@ public class OrderRepairServiceImpl implements OrderRepairService {
             return 0;
         }
         // 插入进度
-        scheduleService.insertSchedule(orderId,RepairOrderStatus.CANCEL.getCode(),1);
+        scheduleService.insertSchedule(orderId,RepairOrderStatus.CANCEL.getCode(),0);
         return orderRepairMapper.delete(orderId);
     }
 
