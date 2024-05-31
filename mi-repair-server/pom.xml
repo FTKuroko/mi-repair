@@ -49,6 +49,21 @@
             <version>1.2.9.RELEASE</version>
         </dependency>
 
+        <!-- 引入HttpClient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.10</version>
+        </dependency>
+
+        <!-- 引入HttpClient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.6</version>
+        </dependency>
+
+
         <!--通用工具类-->
         <dependency>
             <groupId>com</groupId>
