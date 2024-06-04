@@ -13,4 +13,6 @@ import java.util.List;
 public interface ScheduleMapper {
     List<Schedule> getScheduleByOrderId(ScheduleDTO scheduleDTO);
     int insertSchedule(Schedule schedule);
+
+    Schedule getScheduleByOrderIdAndStatus(Long orderId, Integer status);
 }

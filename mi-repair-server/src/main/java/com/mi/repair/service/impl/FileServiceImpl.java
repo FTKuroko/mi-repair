@@ -7,6 +7,7 @@ import com.mi.repair.config.MinioConfig;
 import com.mi.repair.dto.FileDTO;
 import com.mi.repair.entity.MaterialReq;
 import com.mi.repair.entity.OrderRepair;
+import com.mi.repair.entity.Schedule;
 import com.mi.repair.enums.RepairOrderEvent;
 import com.mi.repair.enums.RepairOrderStatus;
 import com.mi.repair.mapper.FileMapper;
@@ -271,7 +272,10 @@ public class FileServiceImpl implements FileService {
         orderRepairService.createPayOrder(orderId);
         stateMachineUtil.saveAndSendEvent(orderId,RepairOrderEvent.RETEST_SUCCESS);
         orderRepairMapper.updateStatusById(orderId, RepairOrderStatus.WAITING_PAY.getCode());
-        scheduleService.insertSchedule(orderId, RepairOrderStatus.WAITING_PAY.getCode(), 1);
+        Schedule schedule = scheduleService.getScheduleByOrderIdAndStatus(orderId, RepairOrderStatus.WAITING_PAY.getCode());
+        if(schedule == null){
+            scheduleService.insertSchedule(orderId, RepairOrderStatus.WAITING_PAY.getCode(), 1);
+        }
         return null;
     }
 

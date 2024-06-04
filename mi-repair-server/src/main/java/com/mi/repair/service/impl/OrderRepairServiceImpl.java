@@ -335,7 +335,10 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         BeanUtils.copyProperties(orderPayDTO, orderPay);
         orderPay.setCreateTime(time);
         orderPay.setUpdateTime(time);
-        orderPayMapper.insert(orderPay);
+        OrderPay pay = orderPayMapper.selectPayOrderById(orderId);
+        if(pay == null){
+            orderPayMapper.insert(orderPay);
+        }
         return orderPayDTO;
     }
 }

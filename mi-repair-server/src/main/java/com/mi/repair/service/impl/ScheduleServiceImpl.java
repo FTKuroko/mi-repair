@@ -60,4 +60,9 @@ public class ScheduleServiceImpl implements ScheduleService {
         schedule.setUpdateTime(time);
         return scheduleMapper.insertSchedule(schedule);
     }
+
+    @Override
+    public Schedule getScheduleByOrderIdAndStatus(Long orderId, Integer status) {
+        return scheduleMapper.getScheduleByOrderIdAndStatus(orderId, status);
+    }
 }

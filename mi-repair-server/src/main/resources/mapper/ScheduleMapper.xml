@@ -30,4 +30,12 @@
         </where>
         order by create_time
     </select>
+
+    <select id="getScheduleByOrderIdAndStatus" resultType="com.mi.repair.entity.Schedule">
+        select * from schedule
+        <where>
+            <if test="orderId != null and orderId != ''">and order_id = #{orderId}</if>
+            <if test="status != null and status != ''">and status = #{status}</if>
+        </where>
+    </select>
 </mapper>
