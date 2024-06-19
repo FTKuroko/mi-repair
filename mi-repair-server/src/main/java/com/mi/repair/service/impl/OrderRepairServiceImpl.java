@@ -49,8 +49,8 @@ public class OrderRepairServiceImpl implements OrderRepairService {
     private MaterialReqMapper materialReqMapper;
     @Autowired
     private OrderPayMapper orderPayMapper;
-    @Autowired
-    private WebSocketServer webSocketServer;
+//    @Autowired
+//    private WebSocketServer webSocketServer;
     @Autowired
     private StateMachineUtil stateMachineUtil;
 
@@ -74,12 +74,12 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         OrderRepairSubmitVO submitVO = OrderRepairSubmitVO.builder().id(orderRepair.getId()).orderTime(time).build();
         // 5、插入进度
         scheduleService.insertSchedule(orderRepair.getId(),RepairOrderStatus.WAITING_FOR_WORKER_ACCEPTANCE.getCode(),0);
-        // 6、下单成功，向工程师端发起来单提醒   TODO: 待前后端联调
-        Map map = new HashMap();
-        map.put("type", 1);
-        map.put("orderId", orderRepair.getId());
-        map.put("content", "订单号:" + orderRepair.getId());
-        webSocketServer.sendToAllClient(JSON.toJSONString(map));
+//        // 6、下单成功，向工程师端发起来单提醒
+//        Map map = new HashMap();
+//        map.put("type", 1);
+//        map.put("orderId", orderRepair.getId());
+//        map.put("content", "订单号:" + orderRepair.getId());
+//        webSocketServer.sendToAllClient(JSON.toJSONString(map));
 
         return submitVO;
     }
@@ -101,7 +101,8 @@ public class OrderRepairServiceImpl implements OrderRepairService {
 
     @Override
     public PageResult pageQuery(UserOrderPageQueryDTO userOrderPageQueryDTO){
-
+        Long userId = BaseContext.getCurrentId();
+        userOrderPageQueryDTO.setUserId(userId);
         PageHelper.startPage(userOrderPageQueryDTO.getPage(), userOrderPageQueryDTO.getPageSize());
         Page<OrderRepair> page = orderRepairMapper.pageQueryByUserId(userOrderPageQueryDTO);
 
@@ -203,6 +204,8 @@ public class OrderRepairServiceImpl implements OrderRepairService {
             scheduleService.insertSchedule(orderId,RepairOrderStatus.RETEST.getCode(),1);
             return orderRepairMapper.updateStatusById(orderId,RepairOrderStatus.RETEST.getCode());
         }
+        // 4、 向用户发起短信通知
+
         return 0;
     }
 

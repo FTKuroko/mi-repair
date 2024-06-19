@@ -5,7 +5,7 @@ mi_repair:
     port: 3306
     database: repairsys
     username: root
-    password:
+    password: Dyc19980925
 file:
 #  upload: "uploads\\"
   upload: "D:\\code\\mi_repair\\uploads\\"
@@ -23,3 +23,9 @@ aliPay:
   notifyUrl:
   returnUrl:
   gatewayUrl: "https://openapi-sandbox.dl.alipaydev.com/gateway.do"
+
+aliyun:
+  sms:
+    accessKeyId: "LTAI5tDrFSNgUvdVsTK8R9M9"
+    accessKeySecret: "gUH51CiGAmWwiegSJW7HwfUysxVVLL"
+    templateCode: "SMS_468405458"

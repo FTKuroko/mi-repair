@@ -2,6 +2,7 @@ package com.mi.repair.controller.worker;
 
 import com.mi.repair.enums.RepairOrderEvent;
 import com.mi.repair.result.PageResult;
+import com.mi.repair.service.MsmService;
 import com.mi.repair.service.OrderRepairService;
 import com.mi.repair.dto.WorkerOrderPageQueryDTO;
 import com.mi.repair.result.Result;
@@ -24,6 +25,8 @@ public class WorkOrderRepairController {
     OrderRepairService orderRepairService;
     @Autowired
     private StateMachineUtil stateMachineUtil;
+    @Autowired
+    private MsmService msmService;
     @PutMapping("/confirm")
     @ApiOperation("工程师接单")
     public Result<String> cofirm(@RequestParam("id") Long id){
@@ -56,7 +59,7 @@ public class WorkOrderRepairController {
         // 1、 修改订单状态
         int i = orderRepairService.orderRepairSuccess(id);
         // TODO：2、 向用户发起通知
-
+        msmService.completedSend("18779406201");
         return i > 0 ? Result.success("工程师维修成功") : Result.error("维修成功操作失效");
     }
 
