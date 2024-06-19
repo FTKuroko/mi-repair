@@ -47,6 +47,7 @@ public class WorkerServiceImpl implements WorkerService {
                 .phone(login.getPhone())
                 .token(token)
                 .build();
+        vo.setRole(1);
         return vo;
     }
 

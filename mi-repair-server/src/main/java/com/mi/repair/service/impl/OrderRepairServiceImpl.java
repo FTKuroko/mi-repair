@@ -3,6 +3,7 @@ package com.mi.repair.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.mi.repair.constant.JwtClaimsConstant;
 import com.mi.repair.context.BaseContext;
 import com.mi.repair.dto.*;
 import com.mi.repair.entity.OrderPay;
@@ -78,9 +79,12 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         Map map = new HashMap();
         map.put("type", 1);
         map.put("orderId", orderRepair.getId());
-        map.put("content", "订单号:" + orderRepair.getId());
-        webSocketServer.sendToAllClient(JSON.toJSONString(map));
-
+        map.put("sn", orderRepair.getSn());
+        map.put("message", "订单创建成功,sn编号:"+orderRepair.getSn());
+        LocalDateTime messageDate = LocalDateTime.now();
+        map.put("date", messageDate);
+        Long currentId = BaseContext.getCurrentId();
+        webSocketServer.sendToClient(currentId+"",JSON.toJSONString(map));
         return submitVO;
     }
 
@@ -96,6 +100,15 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         if(!userId.equals(orderRepair.getUserId())){
             return 0;
         }
+        // 5、用户确认订单，向工程师端发起来单提醒   TODO: 待前后端联调
+        Map map = new HashMap();
+        map.put("orderId", orderRepair.getId());
+        map.put("sn", orderRepair.getSn());
+        map.put("message", "用户确认完毕,sn编号:"+orderRepair.getSn());
+        LocalDateTime messageDate = LocalDateTime.now();
+        map.put("date", messageDate);
+        Long currentId = BaseContext.getCurrentId();
+        webSocketServer.sendToWorker(currentId+"",JSON.toJSONString(map));
         return orderRepairMapper.confirm(orderId);
     }
 
@@ -134,6 +147,15 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         }
         // 插入进度
         scheduleService.insertSchedule(orderId,RepairOrderStatus.CANCEL.getCode(),0);
+        // 6、用户确认订单，向工程师端发起来单提醒   TODO: 待前后端联调
+        Map map = new HashMap();
+        map.put("orderId", orderRepair.getId());
+        map.put("sn", orderRepair.getSn());
+        map.put("message", "用户取消订单,sn编号:"+orderRepair.getSn());
+        LocalDateTime messageDate = LocalDateTime.now();
+        map.put("date", messageDate);
+        Long currentId = BaseContext.getCurrentId();
+        webSocketServer.sendToWorker(currentId+"",JSON.toJSONString(map));
         return orderRepairMapper.delete(orderId);
     }
 
@@ -143,6 +165,16 @@ public class OrderRepairServiceImpl implements OrderRepairService {
         // 插入进度
         scheduleService.insertSchedule(orderId,code,1);
         Long workerId = BaseContext.getCurrentId();
+        OrderRepair orderRepair = orderRepairMapper.selectById(orderId);
+        // 6、下单成功，向工程师端发起来单提醒   TODO: 待前后端联调
+        Map map = new HashMap();
+        map.put("orderId", orderRepair.getId());
+        map.put("sn", orderRepair.getSn());
+        map.put("message", "工程师接单,sn编号:"+orderRepair.getSn());
+        LocalDateTime messageDate = LocalDateTime.now();
+        map.put("date", messageDate);
+        Long currentId = BaseContext.getCurrentId();
+        webSocketServer.sendToClient(currentId+"",JSON.toJSONString(map));
         return orderRepairMapper.updateStatus(orderId, code,workerId);
     }
 

@@ -19,21 +19,21 @@ import java.util.Map;
  * @date 2024/5/20 14:08
  */
 @Component
-@ServerEndpoint("/ws/{sid}")
+@ServerEndpoint("/ws/{sid}/{role}")
 @Slf4j
 public class WebSocketServer {
     // 会话对象
     private static Map<String, Session> sessionMap = new HashMap<>();
-
     /**
      * 连接建立成功调用
      * @param session
      * @param sid
      */
     @OnOpen
-    public void onOpen(Session session, @PathParam("sid") String sid){
-      log.info("客户端:" + sid + "建立连接");
-      sessionMap.put(sid, session);
+    public void onOpen(Session session, @PathParam("sid") String sid,@PathParam("role") String role){
+      String key = role.equals("0")?"用户:"+sid:"工程师:"+sid;
+      log.info("客户端:" + key + "建立连接");
+      sessionMap.put(key, session);
     }
 
     /**
@@ -51,14 +51,37 @@ public class WebSocketServer {
      * @param sid
      */
     @OnClose
-    public void onClose(@PathParam("sid") String sid){
-        log.info("连接断开:" + sid);
-        sessionMap.remove(sid);
+    public void onClose(@PathParam("sid") String sid,@PathParam("role") String role){
+        String key = role.equals("0")?"用户:"+sid:"工程师:"+sid;
+        log.info("连接断开:" + key);
+        sessionMap.remove(key);
     }
 
     public void sendToAllClient(String message){
         Collection<Session> sessions = sessionMap.values();
         for(Session session : sessions){
+            try{
+                // 服务器向客户端发送消息
+                session.getBasicRemote().sendText(message);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+    public void sendToClient(String key,String message){
+        if(sessionMap.containsKey("用户:"+key)){
+            Session session = sessionMap.get("用户:"+key);
+            try{
+                // 服务器向客户端发送消息
+                session.getBasicRemote().sendText(message);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+    public void sendToWorker(String key,String message){
+        if(sessionMap.containsKey("工程师:"+key)){
+            Session session = sessionMap.get("工程师:"+key);
             try{
                 // 服务器向客户端发送消息
                 session.getBasicRemote().sendText(message);

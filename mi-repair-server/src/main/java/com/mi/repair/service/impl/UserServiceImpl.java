@@ -58,6 +58,7 @@ public class UserServiceImpl implements UserService {
                 .phone(login.getPhone())
                 .token(token)
                 .build();
+        vo.setRole(0);
         return vo;
     }
 
