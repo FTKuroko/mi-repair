@@ -81,6 +81,9 @@ public class FileController {
 
     @PostMapping("/{orderId}/uploadVideo")
     public Result<String> uploadVideo(@RequestParam(name = "file") MultipartFile file, @PathVariable Long orderId){
+        if(file == null){
+            return Result.success("视频上传失败");
+        }
         fileService.uploadVideo(file, orderId);
         return Result.success("视频上传成功");
     }

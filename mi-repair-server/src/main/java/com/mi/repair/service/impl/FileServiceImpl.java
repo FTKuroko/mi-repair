@@ -3,7 +3,9 @@ package com.mi.repair.service.impl;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ZipUtil;
+import com.alibaba.fastjson.JSON;
 import com.mi.repair.config.MinioConfig;
+import com.mi.repair.context.BaseContext;
 import com.mi.repair.dto.FileDTO;
 import com.mi.repair.entity.MaterialReq;
 import com.mi.repair.entity.OrderRepair;
@@ -20,6 +22,7 @@ import com.mi.repair.service.OrderRepairService;
 import com.mi.repair.service.ScheduleService;
 import com.mi.repair.utils.FileCompressionUtil;
 import com.mi.repair.utils.StateMachineUtil;
+import com.mi.repair.webSocket.WebSocketServer;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
@@ -40,7 +43,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 罗慧
@@ -63,6 +68,8 @@ public class FileServiceImpl implements FileService {
     private StateMachineUtil stateMachineUtil;
     @Autowired
     private MinioConfig minioConfig;
+    @Autowired
+    private WebSocketServer webSocketServer;
     @Autowired
     private MinioClient minioClient;
     @Value("${mi-repair.minio.bucket.files}")
@@ -269,6 +276,16 @@ public class FileServiceImpl implements FileService {
         }catch (Exception e){
             e.getMessage();
         }
+        OrderRepair orderRepair = orderRepairMapper.selectById(orderId);
+        Map map = new HashMap();
+        map.put("type", 1);
+        map.put("orderId", orderId);
+        map.put("sn", orderRepair.getSn());
+        map.put("message", "等待用户支付订单,sn编号:" + orderRepair.getSn());
+        LocalDateTime messageDate = LocalDateTime.now();
+        map.put("date", messageDate);
+        Long currentId = BaseContext.getCurrentId();
+        webSocketServer.sendToClient(currentId+"",JSON.toJSONString(map));
         orderRepairService.createPayOrder(orderId);
         stateMachineUtil.saveAndSendEvent(orderId,RepairOrderEvent.RETEST_SUCCESS);
         orderRepairMapper.updateStatusById(orderId, RepairOrderStatus.WAITING_PAY.getCode());

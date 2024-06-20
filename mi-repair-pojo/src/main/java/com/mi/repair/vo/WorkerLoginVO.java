@@ -18,6 +18,7 @@ import java.io.Serializable;
 @Builder
 public class WorkerLoginVO implements Serializable {
     private long id;
+    private Integer role;
     private String workerName;
     private String phone;
     private String token;
